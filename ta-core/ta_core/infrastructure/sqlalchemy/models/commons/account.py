@@ -86,9 +86,9 @@ class UserAccount(AbstractCommonDynamicBase):
             gender=self.gender,
             email=self.email,
             email_verified=self.email_verified,
-            followee_ids=[followee.id for followee in followees],
+            followee_ids={followee.id for followee in followees},
             followees=followees,
-            follower_ids=[follower.id for follower in followers],
+            follower_ids={follower.id for follower in followers},
             followers=followers,
         )
 

@@ -18,7 +18,7 @@ class AbstractSequenceBase(AbstractBase):
     def __table_args__(self) -> Any:
         return {
             **super().__table_args__,
-            "info": {"shard_ids": (SEQUENCE_DB_CONNECTION_KEY,)},
+            "info": {"shard_ids": {SEQUENCE_DB_CONNECTION_KEY}},
         }
 
 

@@ -137,7 +137,7 @@ class DevelopUseCase:
                     acted_at=(start + timedelta(hours=random.uniform(17, 19))),
                 )
                 await event_attendance_action_log_repository.bulk_create_event_attendance_action_logs_async(
-                    [attend_log, leave_log]
+                    {attend_log, leave_log}
                 )
 
-        return BaseModelWithErrorCodes(error_codes=())
+        return BaseModelWithErrorCodes(error_codes=[])

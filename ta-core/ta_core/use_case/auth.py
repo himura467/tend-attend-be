@@ -64,7 +64,7 @@ class AuthUseCase:
         )
         if user_account is None:
             return AuthTokenResponse(
-                error_codes=(ErrorCode.USERNAME_NOT_EXIST,),
+                error_codes=[ErrorCode.USERNAME_NOT_EXIST],
                 auth_token=None,
                 access_token_max_age=None,
                 refresh_token_max_age=None,
@@ -74,7 +74,7 @@ class AuthUseCase:
             password, user_account.hashed_password
         ):
             return AuthTokenResponse(
-                error_codes=(ErrorCode.PASSWORD_INCORRECT,),
+                error_codes=[ErrorCode.PASSWORD_INCORRECT],
                 auth_token=None,
                 access_token_max_age=None,
                 refresh_token_max_age=None,
@@ -85,7 +85,7 @@ class AuthUseCase:
         await user_account_repository.update_async(user_account)
 
         return AuthTokenResponse(
-            error_codes=(),
+            error_codes=[],
             auth_token=token,
             access_token_max_age=int(self._ACCESS_TOKEN_EXPIRES.total_seconds()),
             refresh_token_max_age=int(self._REFRESH_TOKEN_EXPIRES.total_seconds()),
@@ -98,7 +98,7 @@ class AuthUseCase:
         account = await self.get_account_by_token(refresh_token, TokenType.REFRESH)
         if account is None:
             return AuthTokenResponse(
-                error_codes=(ErrorCode.REFRESH_TOKEN_INVALID,),
+                error_codes=[ErrorCode.REFRESH_TOKEN_INVALID],
                 auth_token=None,
                 access_token_max_age=None,
                 refresh_token_max_age=None,
@@ -113,7 +113,7 @@ class AuthUseCase:
         await user_account_repository.update_async(user_account)
 
         return AuthTokenResponse(
-            error_codes=(),
+            error_codes=[],
             auth_token=token,
             access_token_max_age=int(self._ACCESS_TOKEN_EXPIRES.total_seconds()),
             refresh_token_max_age=int(self._REFRESH_TOKEN_EXPIRES.total_seconds()),

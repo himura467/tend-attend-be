@@ -29,4 +29,4 @@ class FollowerInfo(BaseModel):
 
 
 class GetFollowersInfoResponse(BaseModelWithErrorCodes):
-    followers: tuple[FollowerInfo, ...] = Field(..., title="Followers Info")
+    followers: list[FollowerInfo] = Field(..., title="Followers Info")

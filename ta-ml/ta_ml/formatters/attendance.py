@@ -71,10 +71,10 @@ def normalize_acted_at(
 
 
 def get_formatted_attendance_data(
-    earliest_attend_data: tuple[EventAttendanceActionLogEntity, ...],
-    latest_leave_data: tuple[EventAttendanceActionLogEntity, ...],
-    event_data: tuple[EventEntity, ...],
-    user_data: tuple[UserAccountEntity, ...],
+    earliest_attend_data: set[EventAttendanceActionLogEntity],
+    latest_leave_data: set[EventAttendanceActionLogEntity],
+    event_data: set[EventEntity],
+    user_data: set[UserAccountEntity],
 ) -> tuple[pd.DataFrame, dict[tuple[int, UUID], pd.DataFrame]]:
     user_event_pairs = {
         (attend.user_id, attend.event_id) for attend in earliest_attend_data

@@ -56,7 +56,7 @@ class AccessControl:
         return account
 
     def __hash__(self) -> int:
-        return hash(",".join(sorted(map(str, list(self.permit)))))
+        return hash(",".join(sorted(map(str, self.permit))))
 
     def has_compatible_role(self, account: Account) -> bool:
         roles = set(groupRoleMap[account.group])

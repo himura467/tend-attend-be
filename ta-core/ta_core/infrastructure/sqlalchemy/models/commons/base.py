@@ -19,7 +19,7 @@ class AbstractCommonBase(AbstractBase):
     def __table_args__(self) -> Any:
         return {
             **super().__table_args__,
-            "info": {"shard_ids": (COMMON_DB_CONNECTION_KEY,)},
+            "info": {"shard_ids": {COMMON_DB_CONNECTION_KEY}},
         }
 
 

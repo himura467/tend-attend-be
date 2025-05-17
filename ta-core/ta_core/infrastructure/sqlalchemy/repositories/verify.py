@@ -34,7 +34,7 @@ class EmailVerificationRepository(
         self, email: EmailStr
     ) -> EmailVerificationEntity | None:
         email_verifications = await self.read_order_by_limit_async(
-            where=(self._model.email == email,),
+            where=[self._model.email == email],
             order_by=self._model.token_expires_at.desc(),
             limit=1,
         )

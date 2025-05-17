@@ -21,7 +21,7 @@ class AbstractShardBase(AbstractBase):
     def __table_args__(self) -> Any:
         return {
             **super().__table_args__,
-            "info": {"shard_ids": SHARD_DB_CONNECTION_KEYS},
+            "info": {"shard_ids": set(SHARD_DB_CONNECTION_KEYS)},
         }
 
 
