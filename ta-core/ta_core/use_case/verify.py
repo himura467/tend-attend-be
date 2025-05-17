@@ -32,11 +32,11 @@ class VerifyUseCase:
         user_account = await user_account_repository.read_by_email_or_none_async(email)
         if user_account is None:
             return RequestEmailVerificationResponse(
-                error_codes=(ErrorCode.EMAIL_NOT_REGISTERED,)
+                error_codes=[ErrorCode.EMAIL_NOT_REGISTERED],
             )
         if user_account.email_verified:
             return RequestEmailVerificationResponse(
-                error_codes=(ErrorCode.EMAIL_ALREADY_VERIFIED,)
+                error_codes=[ErrorCode.EMAIL_ALREADY_VERIFIED],
             )
 
         verification_token = generate_uuid()
@@ -66,9 +66,9 @@ class VerifyUseCase:
 
         user_account = await user_account_repository.read_by_email_or_none_async(email)
         if user_account is None:
-            return VerifyEmailResponse(error_codes=(ErrorCode.EMAIL_NOT_REGISTERED,))
+            return VerifyEmailResponse(error_codes=[ErrorCode.EMAIL_NOT_REGISTERED])
         if user_account.email_verified:
-            return VerifyEmailResponse(error_codes=(ErrorCode.EMAIL_ALREADY_VERIFIED,))
+            return VerifyEmailResponse(error_codes=[ErrorCode.EMAIL_ALREADY_VERIFIED])
 
         email_verification = (
             await email_verification_repository.read_latest_by_email_or_none_async(
@@ -77,18 +77,18 @@ class VerifyUseCase:
         )
         if email_verification is None:
             return VerifyEmailResponse(
-                error_codes=(ErrorCode.VERIFICATION_TOKEN_NOT_EXIST,)
+                error_codes=[ErrorCode.VERIFICATION_TOKEN_NOT_EXIST],
             )
         if email_verification.verification_token != verification_token:
             return VerifyEmailResponse(
-                error_codes=(ErrorCode.VERIFICATION_TOKEN_INVALID,)
+                error_codes=[ErrorCode.VERIFICATION_TOKEN_INVALID],
             )
         if email_verification.token_expires_at < datetime.now(ZoneInfo("UTC")):
             return VerifyEmailResponse(
-                error_codes=(ErrorCode.VERIFICATION_TOKEN_EXPIRED,)
+                error_codes=[ErrorCode.VERIFICATION_TOKEN_EXPIRED],
             )
 
         user_account.email_verified = True
         await user_account_repository.update_async(user_account)
 
-        return VerifyEmailResponse(error_codes=())
+        return VerifyEmailResponse(error_codes=[])

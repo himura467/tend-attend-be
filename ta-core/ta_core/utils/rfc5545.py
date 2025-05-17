@@ -21,44 +21,42 @@ def parse_rrule(rrule_str: str, is_all_day: bool) -> RecurrenceRule:
         )
     interval = int(rrules["INTERVAL"]) if "INTERVAL" in rrules else 1
     bysecond = (
-        tuple(map(int, rrules["BYSECOND"].split(","))) if "BYSECOND" in rrules else None
+        list(map(int, rrules["BYSECOND"].split(","))) if "BYSECOND" in rrules else None
     )
     byminute = (
-        tuple(map(int, rrules["BYMINUTE"].split(","))) if "BYMINUTE" in rrules else None
+        list(map(int, rrules["BYMINUTE"].split(","))) if "BYMINUTE" in rrules else None
     )
-    byhour = (
-        tuple(map(int, rrules["BYHOUR"].split(","))) if "BYHOUR" in rrules else None
-    )
+    byhour = list(map(int, rrules["BYHOUR"].split(","))) if "BYHOUR" in rrules else None
     byday = (
-        tuple(
+        [
             (
                 (int(m.group(1)), Weekday(m.group(2)))
                 if m.group(1)
                 else (0, Weekday(m.group(2)))
             )
             for m in re.finditer(r"(-?\d+)?(\w{2})", rrules["BYDAY"])
-        )
+        ]
         if "BYDAY" in rrules
         else None
     )
     bymonthday = (
-        tuple(map(int, rrules["BYMONTHDAY"].split(",")))
+        list(map(int, rrules["BYMONTHDAY"].split(",")))
         if "BYMONTHDAY" in rrules
         else None
     )
     byyearday = (
-        tuple(map(int, rrules["BYYEARDAY"].split(",")))
+        list(map(int, rrules["BYYEARDAY"].split(",")))
         if "BYYEARDAY" in rrules
         else None
     )
     byweekno = (
-        tuple(map(int, rrules["BYWEEKNO"].split(","))) if "BYWEEKNO" in rrules else None
+        list(map(int, rrules["BYWEEKNO"].split(","))) if "BYWEEKNO" in rrules else None
     )
     bymonth = (
-        tuple(map(int, rrules["BYMONTH"].split(","))) if "BYMONTH" in rrules else None
+        list(map(int, rrules["BYMONTH"].split(","))) if "BYMONTH" in rrules else None
     )
     bysetpos = (
-        tuple(map(int, rrules["BYSETPOS"].split(","))) if "BYSETPOS" in rrules else None
+        list(map(int, rrules["BYSETPOS"].split(","))) if "BYSETPOS" in rrules else None
     )
     wkst = Weekday(rrules["WKST"]) if "WKST" in rrules else Weekday.MO
 
@@ -108,7 +106,7 @@ def parse_recurrence(recurrence_list: list[str], is_all_day: bool) -> Recurrence
     if not rrule:
         raise ValueError("Missing RRULE in recurrence list")
 
-    return Recurrence(rrule=rrule, rdate=tuple(rdate), exdate=tuple(exdate))
+    return Recurrence(rrule=rrule, rdate=rdate, exdate=exdate)
 
 
 def serialize_recurrence(recurrence: Recurrence | None, is_all_day: bool) -> list[str]:

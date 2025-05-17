@@ -14,9 +14,9 @@ class Role(IntEnum):
     GUEST = 1
 
 
-groupRoleMap: dict[Group, list[Role]] = {
-    Group.HOST: [Role.HOST, Role.GUEST],
-    Group.GUEST: [Role.GUEST],
+groupRoleMap: dict[Group, set[Role]] = {
+    Group.HOST: {Role.HOST, Role.GUEST},
+    Group.GUEST: {Role.GUEST},
 }
 
 

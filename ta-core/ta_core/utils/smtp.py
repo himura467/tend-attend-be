@@ -10,9 +10,9 @@ from ta_core.error.error_code import ErrorCode
 
 async def send_verification_email_async(
     user_email: EmailStr, verification_link: str
-) -> tuple[int, ...]:
+) -> list[int]:
     if GMAIL_SENDER_EMAIL is None or GMAIL_APP_PASSWORD is None:
-        return (ErrorCode.ENVIRONMENT_VARIABLE_NOT_SET,)
+        return [ErrorCode.ENVIRONMENT_VARIABLE_NOT_SET]
 
     message = MIMEMultipart("alternative")
     message["Subject"] = "[No-Reply] Email Verification"
@@ -32,6 +32,6 @@ async def send_verification_email_async(
             print(GMAIL_SENDER_EMAIL, GMAIL_APP_PASSWORD)
             await smtp.login(GMAIL_SENDER_EMAIL, GMAIL_APP_PASSWORD)
             await smtp.send_message(message)
-        return ()
+        return []
     except aiosmtplib.SMTPResponseException:
-        return (ErrorCode.SMTP_ERROR,)
+        return [ErrorCode.SMTP_ERROR]

@@ -134,25 +134,25 @@ class EventRepository(AbstractRepository[EventEntity, Event]):
 
     async def read_with_recurrence_by_user_ids_async(
         self, user_ids: set[int]
-    ) -> tuple[EventEntity, ...]:
+    ) -> set[EventEntity]:
         stmt = (
             select(self._model)
             .where(self._model.user_id.in_(user_ids))
             .options(joinedload(Event.recurrence).joinedload(Recurrence.rrule))
         )
         result = await self._uow.execute_async(stmt)
-        return tuple(record.to_entity() for record in result.unique().scalars().all())
+        return set(record.to_entity() for record in result.unique().scalars().all())
 
     async def read_all_with_recurrence_async(
-        self, where: tuple[Any, ...]
-    ) -> tuple[EventEntity, ...]:
+        self, where: list[Any]
+    ) -> set[EventEntity]:
         stmt = (
             select(self._model)
             .where(*where)
             .options(joinedload(Event.recurrence).joinedload(Recurrence.rrule))
         )
         result = await self._uow.execute_async(stmt)
-        return tuple(record.to_entity() for record in result.unique().scalars().all())
+        return set(record.to_entity() for record in result.unique().scalars().all())
 
 
 class EventAttendanceRepository(
@@ -166,11 +166,11 @@ class EventAttendanceRepository(
         self, user_id: int, event_id: UUID, start: datetime
     ) -> EventAttendanceEntity | None:
         return await self.read_one_or_none_async(
-            where=(
+            where=[
                 self._model.user_id == user_id,
                 self._model.event_id == uuid_to_bin(event_id),
                 self._model.start == start,
-            )
+            ],
         )
 
     async def create_or_update_event_attendance_async(
@@ -227,30 +227,30 @@ class EventAttendanceActionLogRepository(
 
     async def bulk_create_event_attendance_action_logs_async(
         self,
-        event_attendance_action_logs: list[EventAttendanceActionLogEntity],
-    ) -> list[EventAttendanceActionLogEntity] | None:
+        event_attendance_action_logs: set[EventAttendanceActionLogEntity],
+    ) -> set[EventAttendanceActionLogEntity] | None:
         return await self.bulk_create_async(event_attendance_action_logs)
 
     async def read_by_user_id_and_event_id_and_start_async(
         self, user_id: int, event_id: UUID, start: datetime
-    ) -> tuple[EventAttendanceActionLogEntity, ...]:
+    ) -> set[EventAttendanceActionLogEntity]:
         return await self.read_all_async(
-            where=(
+            where=[
                 self._model.user_id == user_id,
                 self._model.event_id == uuid_to_bin(event_id),
                 self._model.start == start,
-            )
+            ],
         )
 
     async def read_latest_by_user_id_and_event_id_and_start_or_none_async(
         self, user_id: int, event_id: UUID, start: datetime
     ) -> EventAttendanceActionLogEntity | None:
         event_attendance_action_logs = await self.read_order_by_limit_async(
-            where=(
+            where=[
                 self._model.user_id == user_id,
                 self._model.event_id == uuid_to_bin(event_id),
                 self._model.start == start,
-            ),
+            ],
             order_by=self._model.acted_at.desc(),
             limit=1,
         )
@@ -258,7 +258,7 @@ class EventAttendanceActionLogRepository(
 
     async def read_all_earliest_attend_async(
         self,
-    ) -> tuple[EventAttendanceActionLogEntity, ...]:
+    ) -> set[EventAttendanceActionLogEntity]:
         sub_query = (
             select(
                 self._model.user_id,
@@ -291,11 +291,11 @@ class EventAttendanceActionLogRepository(
             .where(sub_query.c.rn == 1)
         )
         result = await self._uow.execute_async(stmt)
-        return tuple(record.to_entity() for record in result.scalars().all())
+        return set(record.to_entity() for record in result.scalars().all())
 
     async def read_all_latest_leave_async(
         self,
-    ) -> tuple[EventAttendanceActionLogEntity, ...]:
+    ) -> set[EventAttendanceActionLogEntity]:
         sub_query = (
             select(
                 self._model.user_id,
@@ -328,17 +328,17 @@ class EventAttendanceActionLogRepository(
             .where(sub_query.c.rn == 1)
         )
         result = await self._uow.execute_async(stmt)
-        return tuple(record.to_entity() for record in result.scalars().all())
+        return set(record.to_entity() for record in result.scalars().all())
 
     async def delete_by_user_id_and_event_id_and_start_async(
         self, user_id: int, event_id: UUID, start: datetime
     ) -> None:
         await self.delete_all_async(
-            where=(
+            where=[
                 self._model.user_id == user_id,
                 self._model.event_id == uuid_to_bin(event_id),
                 self._model.start == start,
-            )
+            ],
         )
 
 
@@ -351,19 +351,19 @@ class EventAttendanceForecastRepository(
 
     async def bulk_delete_insert_event_attendance_forecasts_async(
         self,
-        event_attendance_forecasts: list[EventAttendanceForecastEntity],
-    ) -> list[EventAttendanceForecastEntity] | None:
-        await self.delete_all_async(where=())
+        event_attendance_forecasts: set[EventAttendanceForecastEntity],
+    ) -> set[EventAttendanceForecastEntity] | None:
+        await self.delete_all_async(where=[])
 
         return await self.bulk_create_async(event_attendance_forecasts)
 
     async def read_all_by_event_ids_async(
         self, event_ids: set[UUID]
-    ) -> tuple[EventAttendanceForecastEntity, ...]:
+    ) -> set[EventAttendanceForecastEntity]:
         return await self.read_all_async(
-            where=(
+            where=[
                 self._model.event_id.in_(
                     uuid_to_bin(event_id) for event_id in event_ids
                 ),
-            )
+            ],
         )

@@ -58,37 +58,29 @@ from ta_core.utils.uuid import UUID, generate_uuid, str_to_uuid, uuid_to_str
 T = TypeVar("T")
 
 
-def convert_tuple_to_list(tpl: tuple[T, ...] | None) -> list[T] | None:
-    return list(tpl) if tpl is not None else None
-
-
-def convert_list_to_tuple(lst: list[T] | None) -> tuple[T, ...] | None:
-    return tuple(lst) if lst is not None else None
-
-
-def convert_byday_tuple_to_byday_list(
-    tpl: tuple[tuple[int, Weekday], ...] | None
+def listify_byday(
+    byday: list[tuple[int, Weekday]] | None
 ) -> list[list[int | Weekday]] | None:
-    return [list(i) for i in tpl] if tpl is not None else None
+    return [list(i) for i in byday] if byday is not None else None
 
 
-def convert_byday_list_to_byday_tuple(
-    lst: list[list[int | Weekday]] | None,
-) -> tuple[tuple[int, Weekday], ...] | None:
+def parse_byday(
+    byday: list[list[int | Weekday]] | None,
+) -> list[tuple[int, Weekday]] | None:
     return (
-        tuple((int(i[0]), Weekday(str(i[1]))) for i in lst) if lst is not None else None
+        [(int(i[0]), Weekday(str(i[1]))) for i in byday] if byday is not None else None
     )
 
 
-def convert_date_tuple_to_str_list(dates: tuple[date, ...]) -> list[str]:
+def stringify_dates(dates: list[date]) -> list[str]:
     return [d.isoformat() for d in dates]
 
 
-def convert_str_list_to_date_tuple(dates: list[str]) -> tuple[date, ...]:
-    return tuple(date.fromisoformat(d) for d in dates)
+def parse_dates(dates: list[str]) -> list[date]:
+    return [date.fromisoformat(d) for d in dates]
 
 
-def serialize_events(events: tuple[EventEntity, ...]) -> list[EventWithIdDto]:
+def serialize_events(events: set[EventEntity]) -> list[EventWithIdDto]:
     event_dto_list = []
     for event in events:
         recurrence: Recurrence | None = None
@@ -99,28 +91,20 @@ def serialize_events(events: tuple[EventEntity, ...]) -> list[EventWithIdDto]:
                     until=event.recurrence.rrule.until,
                     count=event.recurrence.rrule.count,
                     interval=event.recurrence.rrule.interval,
-                    bysecond=convert_list_to_tuple(event.recurrence.rrule.bysecond),
-                    byminute=convert_list_to_tuple(event.recurrence.rrule.byminute),
-                    byhour=convert_list_to_tuple(event.recurrence.rrule.byhour),
-                    byday=convert_byday_list_to_byday_tuple(
-                        event.recurrence.rrule.byday
-                    ),
-                    bymonthday=convert_list_to_tuple(event.recurrence.rrule.bymonthday),
-                    byyearday=convert_list_to_tuple(event.recurrence.rrule.byyearday),
-                    byweekno=convert_list_to_tuple(event.recurrence.rrule.byweekno),
-                    bymonth=convert_list_to_tuple(event.recurrence.rrule.bymonth),
-                    bysetpos=convert_list_to_tuple(event.recurrence.rrule.bysetpos),
+                    bysecond=event.recurrence.rrule.bysecond,
+                    byminute=event.recurrence.rrule.byminute,
+                    byhour=event.recurrence.rrule.byhour,
+                    byday=parse_byday(event.recurrence.rrule.byday),
+                    bymonthday=event.recurrence.rrule.bymonthday,
+                    byyearday=event.recurrence.rrule.byyearday,
+                    byweekno=event.recurrence.rrule.byweekno,
+                    bymonth=event.recurrence.rrule.bymonth,
+                    bysetpos=event.recurrence.rrule.bysetpos,
                     wkst=event.recurrence.rrule.wkst,
                 ),
-                rdate=(
-                    convert_str_list_to_date_tuple(event.recurrence.rdate)
-                    if event.is_all_day
-                    else tuple()
-                ),
+                rdate=(parse_dates(event.recurrence.rdate) if event.is_all_day else []),
                 exdate=(
-                    convert_str_list_to_date_tuple(event.recurrence.exdate)
-                    if event.is_all_day
-                    else tuple()
+                    parse_dates(event.recurrence.exdate) if event.is_all_day else []
                 ),
             )
         event_dto_list.append(
@@ -179,7 +163,7 @@ class EventUseCase:
 
         host = await user_account_repository.read_by_id_or_none_async(host_id)
         if host is None:
-            return CreateEventResponse(error_codes=(ErrorCode.ACCOUNT_NOT_FOUND,))
+            return CreateEventResponse(error_codes=[ErrorCode.ACCOUNT_NOT_FOUND])
 
         user_id = host.user_id
 
@@ -195,17 +179,15 @@ class EventUseCase:
                     until=event.recurrence.rrule.until,
                     count=event.recurrence.rrule.count,
                     interval=event.recurrence.rrule.interval,
-                    bysecond=convert_tuple_to_list(event.recurrence.rrule.bysecond),
-                    byminute=convert_tuple_to_list(event.recurrence.rrule.byminute),
-                    byhour=convert_tuple_to_list(event.recurrence.rrule.byhour),
-                    byday=convert_byday_tuple_to_byday_list(
-                        event.recurrence.rrule.byday
-                    ),
-                    bymonthday=convert_tuple_to_list(event.recurrence.rrule.bymonthday),
-                    byyearday=convert_tuple_to_list(event.recurrence.rrule.byyearday),
-                    byweekno=convert_tuple_to_list(event.recurrence.rrule.byweekno),
-                    bymonth=convert_tuple_to_list(event.recurrence.rrule.bymonth),
-                    bysetpos=convert_tuple_to_list(event.recurrence.rrule.bysetpos),
+                    bysecond=event.recurrence.rrule.bysecond,
+                    byminute=event.recurrence.rrule.byminute,
+                    byhour=event.recurrence.rrule.byhour,
+                    byday=listify_byday(event.recurrence.rrule.byday),
+                    bymonthday=event.recurrence.rrule.bymonthday,
+                    byyearday=event.recurrence.rrule.byyearday,
+                    byweekno=event.recurrence.rrule.byweekno,
+                    bymonth=event.recurrence.rrule.bymonth,
+                    bysetpos=event.recurrence.rrule.bysetpos,
                     wkst=event.recurrence.rrule.wkst,
                 )
             )
@@ -217,8 +199,8 @@ class EventUseCase:
                 user_id=user_id,
                 rrule_id=recurrence_rule.id,
                 rrule=recurrence_rule,
-                rdate=convert_date_tuple_to_str_list(event.recurrence.rdate),
-                exdate=convert_date_tuple_to_str_list(event.recurrence.exdate),
+                rdate=stringify_dates(event.recurrence.rdate),
+                exdate=stringify_dates(event.recurrence.exdate),
             )
             if recurrence_entity is None:
                 raise ValueError("Failed to create recurrence")
@@ -239,7 +221,7 @@ class EventUseCase:
         if event_entity is None:
             raise ValueError("Failed to create event")
 
-        return CreateEventResponse(error_codes=())
+        return CreateEventResponse(error_codes=[])
 
     @rollbackable
     async def attend_event_async(
@@ -260,18 +242,18 @@ class EventUseCase:
 
         guest = await user_account_repository.read_by_id_or_none_async(guest_id)
         if guest is None:
-            return AttendEventResponse(error_codes=(ErrorCode.ACCOUNT_NOT_FOUND,))
+            return AttendEventResponse(error_codes=[ErrorCode.ACCOUNT_NOT_FOUND])
 
         user_id = guest.user_id
 
         event = await event_repository.read_by_id_or_none_async(event_id)
         if event is None:
-            return AttendEventResponse(error_codes=(ErrorCode.EVENT_NOT_FOUND,))
+            return AttendEventResponse(error_codes=[ErrorCode.EVENT_NOT_FOUND])
 
         if action == AttendanceAction.ATTEND:
             if not event.is_attendable(start, datetime.now(ZoneInfo("UTC"))):
                 return AttendEventResponse(
-                    error_codes=(ErrorCode.EVENT_NOT_ATTENDABLE,)
+                    error_codes=[ErrorCode.EVENT_NOT_ATTENDABLE],
                 )
 
             await event_attendance_repository.create_or_update_event_attendance_async(
@@ -283,7 +265,7 @@ class EventUseCase:
             )
         elif action == AttendanceAction.LEAVE:
             if not event.is_leaveable(start, datetime.now(ZoneInfo("UTC"))):
-                return AttendEventResponse(error_codes=(ErrorCode.EVENT_NOT_LEAVEABLE,))
+                return AttendEventResponse(error_codes=[ErrorCode.EVENT_NOT_LEAVEABLE])
 
             await event_attendance_repository.create_or_update_event_attendance_async(
                 entity_id=generate_uuid(),
@@ -302,7 +284,7 @@ class EventUseCase:
             acted_at=datetime.now(ZoneInfo("UTC")),
         )
 
-        return AttendEventResponse(error_codes=())
+        return AttendEventResponse(error_codes=[])
 
     @rollbackable
     async def update_attendances_async(
@@ -323,19 +305,19 @@ class EventUseCase:
 
         guest = await user_account_repository.read_by_id_or_none_async(guest_id)
         if guest is None:
-            return UpdateAttendancesResponse(error_codes=(ErrorCode.ACCOUNT_NOT_FOUND,))
+            return UpdateAttendancesResponse(error_codes=[ErrorCode.ACCOUNT_NOT_FOUND])
 
         user_id = guest.user_id
 
         event = await event_repository.read_by_id_or_none_async(event_id)
         if event is None:
-            return UpdateAttendancesResponse(error_codes=(ErrorCode.EVENT_NOT_FOUND,))
+            return UpdateAttendancesResponse(error_codes=[ErrorCode.EVENT_NOT_FOUND])
 
         await event_attendance_action_log_repository.delete_by_user_id_and_event_id_and_start_async(
             user_id=user_id, event_id=event.id, start=start
         )
 
-        event_attendance_action_logs = [
+        event_attendance_action_logs = {
             EventAttendanceActionLogEntity(
                 entity_id=generate_uuid(),
                 user_id=user_id,
@@ -345,7 +327,7 @@ class EventUseCase:
                 acted_at=attendance.acted_at,
             )
             for attendance in attendances
-        ]
+        }
         await event_attendance_action_log_repository.bulk_create_event_attendance_action_logs_async(
             event_attendance_action_logs
         )
@@ -368,7 +350,7 @@ class EventUseCase:
                 state=AttendanceState.EXCUSED_ABSENCE,
             )
 
-        return UpdateAttendancesResponse(error_codes=())
+        return UpdateAttendancesResponse(error_codes=[])
 
     @rollbackable
     async def get_attendance_history_async(
@@ -388,7 +370,7 @@ class EventUseCase:
                 attendances_with_username=AttendancesWithUsernameDto(
                     username="", attendances=[]
                 ),
-                error_codes=(ErrorCode.ACCOUNT_NOT_FOUND,),
+                error_codes=[ErrorCode.ACCOUNT_NOT_FOUND],
             )
 
         user_id = guest.user_id
@@ -399,7 +381,7 @@ class EventUseCase:
                 attendances_with_username=AttendancesWithUsernameDto(
                     username="", attendances=[]
                 ),
-                error_codes=(ErrorCode.EVENT_NOT_FOUND,),
+                error_codes=[ErrorCode.EVENT_NOT_FOUND],
             )
 
         logs = await event_attendance_action_log_repository.read_by_user_id_and_event_id_and_start_async(
@@ -414,7 +396,7 @@ class EventUseCase:
             attendances_with_username=AttendancesWithUsernameDto(
                 username=guest.username, attendances=attendances
             ),
-            error_codes=(),
+            error_codes=[],
         )
 
     @rollbackable
@@ -427,7 +409,8 @@ class EventUseCase:
         )
         if user_account is None:
             return GetMyEventsResponse(
-                events=[], error_codes=(ErrorCode.ACCOUNT_NOT_FOUND,)
+                events=[],
+                error_codes=[ErrorCode.ACCOUNT_NOT_FOUND],
             )
 
         user_id = user_account.user_id
@@ -436,7 +419,7 @@ class EventUseCase:
             {user_id}
         )
 
-        return GetMyEventsResponse(events=serialize_events(events), error_codes=())
+        return GetMyEventsResponse(events=serialize_events(events), error_codes=[])
 
     @rollbackable
     async def get_following_events_async(
@@ -452,7 +435,8 @@ class EventUseCase:
         )
         if follower is None:
             return GetFollowingEventsResponse(
-                events=[], error_codes=(ErrorCode.ACCOUNT_NOT_FOUND,)
+                events=[],
+                error_codes=[ErrorCode.ACCOUNT_NOT_FOUND],
             )
 
         user_ids = {followee.user_id for followee in follower.followees} | {
@@ -462,7 +446,8 @@ class EventUseCase:
         events = await event_repository.read_with_recurrence_by_user_ids_async(user_ids)
 
         return GetFollowingEventsResponse(
-            events=serialize_events(events), error_codes=()
+            events=serialize_events(events),
+            error_codes=[],
         )
 
     @rollbackable
@@ -480,7 +465,8 @@ class EventUseCase:
         guest = await user_account_repository.read_by_id_or_none_async(guest_id)
         if guest is None:
             return GetGuestAttendanceStatusResponse(
-                attend=False, error_codes=(ErrorCode.ACCOUNT_NOT_FOUND,)
+                attend=False,
+                error_codes=[ErrorCode.ACCOUNT_NOT_FOUND],
             )
 
         user_id = guest.user_id
@@ -488,18 +474,19 @@ class EventUseCase:
         event = await event_repository.read_by_id_or_none_async(event_id)
         if event is None:
             return GetGuestAttendanceStatusResponse(
-                attend=False, error_codes=(ErrorCode.EVENT_NOT_FOUND,)
+                attend=False,
+                error_codes=[ErrorCode.EVENT_NOT_FOUND],
             )
 
         event_attendance_action_log = await event_attendance_action_log_repository.read_latest_by_user_id_and_event_id_and_start_or_none_async(
             user_id=user_id, event_id=event_id, start=start
         )
         if event_attendance_action_log is None:
-            return GetGuestAttendanceStatusResponse(attend=False, error_codes=())
+            return GetGuestAttendanceStatusResponse(attend=False, error_codes=[])
 
         return GetGuestAttendanceStatusResponse(
             attend=event_attendance_action_log.action == AttendanceAction.ATTEND,
-            error_codes=(),
+            error_codes=[],
         )
 
     @rollbackable
@@ -521,14 +508,14 @@ class EventUseCase:
         latest_leave_data = (
             await event_attendance_action_log_repository.read_all_latest_leave_async()
         )
-        event_data = await event_repository.read_all_with_recurrence_async(where=())
-        user_data = await user_account_repository.read_all_async(where=())
+        event_data = await event_repository.read_all_with_recurrence_async(where=[])
+        user_data = await user_account_repository.read_all_async(where=[])
 
         forecast_result = forecast_attendance_time(
             earliest_attend_data, latest_leave_data, event_data, user_data
         )
 
-        forecasts = [
+        forecasts = {
             EventAttendanceForecastEntity(
                 entity_id=generate_uuid(),
                 user_id=user_id,
@@ -540,7 +527,7 @@ class EventUseCase:
             for user_id, events in forecast_result.attendance_time_forecasts.items()
             for event_id, forecasts in events.items()
             for forecast in forecasts
-        ]
+        }
         await event_attendance_forecast_repository.bulk_delete_insert_event_attendance_forecasts_async(
             forecasts
         )
@@ -565,7 +552,7 @@ class EventUseCase:
         if user_account is None:
             return GetAttendanceTimeForecastsResponse(
                 attendance_time_forecasts_with_username={},
-                error_codes=(ErrorCode.ACCOUNT_NOT_FOUND,),
+                error_codes=[ErrorCode.ACCOUNT_NOT_FOUND],
             )
 
         user_ids = {followee.user_id for followee in user_account.followees} | {
@@ -595,7 +582,7 @@ class EventUseCase:
         username_dict = {
             ua.user_id: ua.username
             for ua in await user_account_repository.read_all_async(
-                where=()
+                where=[],
             )  # TODO: user_account テーブルに対する read_all_async はまずそう
         }
         attendance_time_forecasts_with_username = {
@@ -611,5 +598,5 @@ class EventUseCase:
 
         return GetAttendanceTimeForecastsResponse(
             attendance_time_forecasts_with_username=attendance_time_forecasts_with_username,
-            error_codes=(),
+            error_codes=[],
         )

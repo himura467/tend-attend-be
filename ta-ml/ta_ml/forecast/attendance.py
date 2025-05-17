@@ -33,10 +33,10 @@ def generate_future_event_starts(
 
 
 def forecast_attendance_time(
-    earliest_attend_data: tuple[EventAttendanceActionLogEntity, ...],
-    latest_leave_data: tuple[EventAttendanceActionLogEntity, ...],
-    event_data: tuple[EventEntity, ...],
-    user_data: tuple[UserAccountEntity, ...],
+    earliest_attend_data: set[EventAttendanceActionLogEntity],
+    latest_leave_data: set[EventAttendanceActionLogEntity],
+    event_data: set[EventEntity],
+    user_data: set[UserAccountEntity],
 ) -> ForecastAttendanceTimeResponse:
     tfm = initialize_timesfm()
 
@@ -174,5 +174,5 @@ def forecast_attendance_time(
 
     return ForecastAttendanceTimeResponse(
         attendance_time_forecasts=attendance_time_forecasts,
-        error_codes=(),
+        error_codes=[],
     )

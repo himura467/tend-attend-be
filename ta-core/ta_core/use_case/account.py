@@ -56,10 +56,10 @@ class AccountUseCase:
         )
         if user_account is None:
             return CreateUserAccountResponse(
-                error_codes=(ErrorCode.USERNAME_OR_EMAIL_ALREADY_REGISTERED,)
+                error_codes=[ErrorCode.USERNAME_OR_EMAIL_ALREADY_REGISTERED],
             )
 
-        return CreateUserAccountResponse(error_codes=())
+        return CreateUserAccountResponse(error_codes=[])
 
     @rollbackable
     async def get_followers_info_async(
@@ -76,15 +76,15 @@ class AccountUseCase:
             raise ValueError("Followee ID not found")
 
         return GetFollowersInfoResponse(
-            error_codes=(),
+            error_codes=[],
             followers=(
-                tuple(
+                [
                     FollowerInfoDto(
                         account_id=uuid_to_str(follower.id),
                         username=follower.username,
                         nickname=follower.nickname,
                     )
                     for follower in followee.followers
-                )
+                ]
             ),
         )

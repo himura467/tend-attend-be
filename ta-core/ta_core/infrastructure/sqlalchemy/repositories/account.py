@@ -70,18 +70,18 @@ class UserAccountRepository(AbstractRepository[UserAccountEntity, UserAccount]):
         self, username: str
     ) -> UserAccountEntity | None:
         return await self.read_one_or_none_async(
-            where=(self._model.username == username,)
+            where=[self._model.username == username],
         )
 
     async def read_by_usernames_async(
         self, usernames: set[str]
-    ) -> tuple[UserAccountEntity, ...]:
-        return await self.read_all_async(where=(self._model.username.in_(usernames),))
+    ) -> set[UserAccountEntity]:
+        return await self.read_all_async(where=[self._model.username.in_(usernames)])
 
     async def read_by_email_or_none_async(
         self, email: EmailStr
     ) -> UserAccountEntity | None:
-        return await self.read_one_or_none_async(where=(self._model.email == email,))
+        return await self.read_one_or_none_async(where=[self._model.email == email])
 
     async def read_with_followees_by_id_or_none_async(
         self, record_id: UUID

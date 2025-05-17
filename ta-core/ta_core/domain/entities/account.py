@@ -20,9 +20,9 @@ class UserAccount(IEntity):
         gender: Gender,
         email: EmailStr,
         email_verified: bool,
-        followee_ids: list[UUID],
+        followee_ids: set[UUID],
         followees: list["UserAccount"],
-        follower_ids: list[UUID],
+        follower_ids: set[UUID],
         followers: list["UserAccount"],
     ) -> None:
         super().__init__(entity_id)
