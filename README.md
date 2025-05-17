@@ -16,7 +16,7 @@ https://python-poetry.org
 
 ```sh
 poetry config virtualenvs.in-project true
-./dev/poetry-all.sh install
+./scripts/poetry-all.sh install
 ```
 
 ### Build and run the application using Docker Compose
