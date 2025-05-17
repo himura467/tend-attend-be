@@ -2,16 +2,6 @@ import time
 from collections import defaultdict
 from datetime import datetime
 
-from ta_core.domain.entities.account import UserAccount as UserAccountEntity
-from ta_core.domain.entities.event import Event as EventEntity
-from ta_core.domain.entities.event import (
-    EventAttendanceActionLog as EventAttendanceActionLogEntity,
-)
-from ta_core.dtos.event import AttendanceTimeForecast as AttendanceTimeForecastDto
-from ta_core.dtos.event import ForecastAttendanceTimeResponse
-from ta_core.features.event import Frequency
-from ta_core.utils.uuid import uuid_to_str
-
 from ta_ml.api.timesfm import initialize_timesfm
 from ta_ml.formatters.attendance import (
     denormalize_acted_at,
@@ -19,6 +9,11 @@ from ta_ml.formatters.attendance import (
     get_formatted_attendance_data,
     get_next_event_start,
 )
+from ta_ml.types import AttendanceTimeForecast as AttendanceTimeForecastDto
+from ta_ml.types import Event as EventEntity
+from ta_ml.types import EventAttendanceActionLog as EventAttendanceActionLogEntity
+from ta_ml.types import EventDict, ForecastAttendanceTimeResponse, Frequency
+from ta_ml.types import UserAccount as UserAccountEntity
 from ta_ml.utils.stl import stl_decompose
 
 
@@ -135,7 +130,7 @@ def forecast_attendance_time(
     for (user_id, event_id), group in df.groupby(["user_id", "event_id"]):
         latest_starts[(user_id, event_id)] = group["start"].max()
 
-    event_dict = {
+    event_dict: dict[str, EventDict] = {
         event.id: {
             "start": event.start,
             "end": event.end,
@@ -170,9 +165,12 @@ def forecast_attendance_time(
             )
             for j, start in enumerate(future_starts)
         ]
-        attendance_time_forecasts[user_id][uuid_to_str(event_id)].extend(forecasts)
+        attendance_time_forecasts[user_id][event_id].extend(forecasts)
 
     return ForecastAttendanceTimeResponse(
-        attendance_time_forecasts=attendance_time_forecasts,
+        attendance_time_forecasts=dict(
+            (user_id, dict(forecasts))
+            for user_id, forecasts in attendance_time_forecasts.items()
+        ),
         error_codes=[],
     )
