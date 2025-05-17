@@ -21,4 +21,4 @@ router.include_router(
 )
 def reset_aurora() -> ResetAuroraResponse:
     reset_aurora_db()
-    return ResetAuroraResponse(error_codes=())
+    return ResetAuroraResponse(error_codes=[])

@@ -22,7 +22,7 @@ def stamp_revision(req: StampRevisionRequest) -> StampRevisionResponse:
     alembic_config = get_alembic_config()
     command.stamp(alembic_config, revision)
 
-    return StampRevisionResponse(error_codes=())
+    return StampRevisionResponse(error_codes=[])
 
 
 # TODO: JWT で認証されたユーザーのみがこのエンドポイントを呼び出せるようにする
@@ -35,4 +35,4 @@ def upgrade_db() -> UpgradeDbResponse:
     alembic_config = get_alembic_config()
     command.upgrade(alembic_config, "head")
 
-    return UpgradeDbResponse(error_codes=())
+    return UpgradeDbResponse(error_codes=[])
