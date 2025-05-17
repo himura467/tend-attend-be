@@ -5,17 +5,14 @@ from zoneinfo import ZoneInfo
 
 import numpy as np
 import pandas as pd
-from ta_core.domain.entities.account import UserAccount as UserAccountEntity
-from ta_core.domain.entities.event import Event as EventEntity
-from ta_core.domain.entities.event import (
-    EventAttendanceActionLog as EventAttendanceActionLogEntity,
-)
-from ta_core.features.account import Gender
-from ta_core.features.event import AttendanceAction, Frequency
-from ta_core.utils.datetime import apply_timezone
-from ta_core.utils.uuid import UUID, generate_uuid
 
 from ta_ml.constants import timesfm
+from ta_ml.types import AttendanceAction
+from ta_ml.types import Event as EventEntity
+from ta_ml.types import EventAttendanceActionLog as EventAttendanceActionLogEntity
+from ta_ml.types import EventDict, Frequency, Gender
+from ta_ml.types import UserAccount as UserAccountEntity
+from ta_ml.utils.datetime import apply_timezone
 
 
 def get_next_event_start(current: datetime, freq: Frequency) -> datetime:
@@ -75,11 +72,11 @@ def get_formatted_attendance_data(
     latest_leave_data: set[EventAttendanceActionLogEntity],
     event_data: set[EventEntity],
     user_data: set[UserAccountEntity],
-) -> tuple[pd.DataFrame, dict[tuple[int, UUID], pd.DataFrame]]:
+) -> tuple[pd.DataFrame, dict[tuple[int, str], pd.DataFrame]]:
     user_event_pairs = {
         (attend.user_id, attend.event_id) for attend in earliest_attend_data
     }
-    event_dict = {}
+    event_dict: dict[str, EventDict] = {}
     for event in event_data:
         event_dict[event.id] = {
             "start": event.start,
@@ -130,7 +127,7 @@ def get_formatted_attendance_data(
             else:
                 earliest_attend_data_considering_absence.append(
                     EventAttendanceActionLogEntity(
-                        entity_id=generate_uuid(),
+                        entity_id=f"absence_attend_{user_id}_{event_id}_{current.isoformat()}",
                         user_id=user_id,
                         event_id=event_id,
                         start=current,
@@ -143,7 +140,7 @@ def get_formatted_attendance_data(
                 )
             current = get_next_event_start(current, freq)
 
-    data_by_group: defaultdict[tuple[int, UUID], dict[str, list[Any]]] = defaultdict(
+    data_by_group: defaultdict[tuple[int, str], dict[str, list[Any]]] = defaultdict(
         lambda: {
             "user_id": [],
             "age": [],
@@ -174,7 +171,7 @@ def get_formatted_attendance_data(
         leave = latest_leave_dict.get(
             (attend.user_id, attend.event_id, attend.start),
             EventAttendanceActionLogEntity(
-                entity_id=generate_uuid(),
+                entity_id=f"absence_leave_{attend.user_id}_{attend.event_id}_{attend.start.isoformat()}",
                 user_id=attend.user_id,
                 event_id=attend.event_id,
                 start=attend.start,
