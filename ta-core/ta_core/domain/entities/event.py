@@ -169,7 +169,7 @@ class EventAttendanceForecast(IEntity):
         event_id: UUID,
         start: datetime,
         forecasted_attended_at: datetime,
-        forecasted_duration: int,
+        forecasted_duration: float,
     ) -> None:
         super().__init__(entity_id)
         self.user_id = user_id

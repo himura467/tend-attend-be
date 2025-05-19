@@ -1,10 +1,10 @@
 from datetime import datetime
 
 from sqlalchemy.dialects.mysql import (
-    BIGINT,
     BINARY,
     BOOLEAN,
     DATETIME,
+    DOUBLE,
     ENUM,
     JSON,
     SMALLINT,
@@ -315,8 +315,8 @@ class EventAttendanceForecast(AbstractShardDynamicBase):
     forecasted_attended_at: Mapped[datetime] = mapped_column(
         DATETIME(timezone=True), nullable=False, comment="Forecasted Attendance Time"
     )
-    forecasted_duration: Mapped[int] = mapped_column(
-        BIGINT(unsigned=True), nullable=False, comment="Forecasted Duration in Seconds"
+    forecasted_duration: Mapped[float] = mapped_column(
+        DOUBLE, nullable=False, comment="Forecasted Duration in Seconds"
     )
 
     def to_entity(self) -> "EventAttendanceForecastEntity":

@@ -4,8 +4,6 @@ from datetime import date, datetime
 from typing import TypeVar
 from zoneinfo import ZoneInfo
 
-from ta_ml.forecast.attendance import forecast_attendance_time
-
 from ta_core.domain.entities.event import Event as EventEntity
 from ta_core.domain.entities.event import (
     EventAttendanceActionLog as EventAttendanceActionLogEntity,
@@ -493,26 +491,28 @@ class EventUseCase:
     async def forecast_attendance_time_async(
         self,
     ) -> ForecastAttendanceTimeResponse:
-        event_attendance_action_log_repository = EventAttendanceActionLogRepository(
-            self.uow
-        )
-        event_repository = EventRepository(self.uow)
-        user_account_repository = UserAccountRepository(self.uow)
+        # event_attendance_action_log_repository = EventAttendanceActionLogRepository(
+        #     self.uow
+        # )
+        # event_repository = EventRepository(self.uow)
+        # user_account_repository = UserAccountRepository(self.uow)
         event_attendance_forecast_repository = EventAttendanceForecastRepository(
             self.uow
         )
 
-        earliest_attend_data = (
-            await event_attendance_action_log_repository.read_all_earliest_attend_async()
-        )
-        latest_leave_data = (
-            await event_attendance_action_log_repository.read_all_latest_leave_async()
-        )
-        event_data = await event_repository.read_all_with_recurrence_async(where=[])
-        user_data = await user_account_repository.read_all_async(where=[])
+        # earliest_attend_data = (
+        #     await event_attendance_action_log_repository.read_all_earliest_attend_async()
+        # )
+        # latest_leave_data = (
+        #     await event_attendance_action_log_repository.read_all_latest_leave_async()
+        # )
+        # event_data = await event_repository.read_all_with_recurrence_async(where=[])
+        # user_data = await user_account_repository.read_all_async(where=[])
 
-        forecast_result = forecast_attendance_time(
-            earliest_attend_data, latest_leave_data, event_data, user_data
+        # 予測を無効化し、空の辞書を返す
+        forecast_result = ForecastAttendanceTimeResponse(
+            attendance_time_forecasts={},
+            error_codes=[],
         )
 
         forecasts = {
