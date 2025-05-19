@@ -3,17 +3,20 @@ from collections import defaultdict
 from datetime import datetime
 
 from ta_ml.api.timesfm import initialize_timesfm
+from ta_ml.domain.entities.account import UserAccount as UserAccountEntity
+from ta_ml.domain.entities.event import Event as EventEntity
+from ta_ml.domain.entities.event import (
+    EventAttendanceActionLog as EventAttendanceActionLogEntity,
+)
+from ta_ml.dtos.forecast import AttendanceTimeForecast as AttendanceTimeForecastDto
+from ta_ml.dtos.forecast import ForecastAttendanceTimeResponse
+from ta_ml.features.event import EventDict, Frequency
 from ta_ml.formatters.attendance import (
     denormalize_acted_at,
     denormalize_duration,
     get_formatted_attendance_data,
     get_next_event_start,
 )
-from ta_ml.types import AttendanceTimeForecast as AttendanceTimeForecastDto
-from ta_ml.types import Event as EventEntity
-from ta_ml.types import EventAttendanceActionLog as EventAttendanceActionLogEntity
-from ta_ml.types import EventDict, ForecastAttendanceTimeResponse, Frequency
-from ta_ml.types import UserAccount as UserAccountEntity
 from ta_ml.utils.stl import stl_decompose
 
 
