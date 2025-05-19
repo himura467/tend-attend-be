@@ -21,10 +21,14 @@ RUN python -m pip install --upgrade pip setuptools wheel
 WORKDIR /app
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN curl -sSL https://install.python-poetry.org | python -
-COPY ta-ml/pyproject.toml ta-ml/poetry.lock ta-ml/main.py .
+COPY ta-ml/pyproject.toml ta-ml/poetry.lock ta-ml/main.py ta-ml/gunicorn.conf.py .
 COPY ta-ml/ta_ml ./ta_ml
 RUN poetry install --only main --no-root
 
 FROM base AS development
 EXPOSE 8000
 CMD ["uvicorn", "main:app", "--reload", "--host", "0.0.0.0", "--port", "8000"]
+
+FROM base AS production
+EXPOSE 8000
+CMD ["gunicorn", "-c", "gunicorn.conf.py"]
