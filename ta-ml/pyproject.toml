@@ -13,6 +13,7 @@ statsmodels = "^0.14.4"
 timesfm = "^1.2.9"
 fastapi = "^0.115.12"
 uvicorn = {extras = ["standard"], version = "^0.34.2"}
+gunicorn = "^23.0.0"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^1.9.0"
@@ -30,9 +31,9 @@ profile = "black"
 line_length = 88
 
 [tool.poe.tasks]
-mypy = "mypy --config-file ../mypy.ini ta_ml tests main.py"
-flake8 = "flake8 --config ../.flake8 ta_ml tests main.py"
-black = "black ta_ml tests main.py"
-isort = "isort ta_ml tests main.py"
+mypy = "mypy --config-file ../mypy.ini ta_ml tests main.py gunicorn.conf.py"
+flake8 = "flake8 --config ../.flake8 ta_ml tests main.py gunicorn.conf.py"
+black = "black ta_ml tests main.py gunicorn.conf.py"
+isort = "isort ta_ml tests main.py gunicorn.conf.py"
 lint = ["mypy", "flake8"]
 format = ["black", "isort"]
