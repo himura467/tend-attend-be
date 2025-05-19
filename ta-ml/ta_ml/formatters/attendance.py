@@ -7,11 +7,13 @@ import numpy as np
 import pandas as pd
 
 from ta_ml.constants import timesfm
-from ta_ml.types import AttendanceAction
-from ta_ml.types import Event as EventEntity
-from ta_ml.types import EventAttendanceActionLog as EventAttendanceActionLogEntity
-from ta_ml.types import EventDict, Frequency, Gender
-from ta_ml.types import UserAccount as UserAccountEntity
+from ta_ml.domain.entities.account import UserAccount as UserAccountEntity
+from ta_ml.domain.entities.event import Event as EventEntity
+from ta_ml.domain.entities.event import (
+    EventAttendanceActionLog as EventAttendanceActionLogEntity,
+)
+from ta_ml.features.account import Gender
+from ta_ml.features.event import AttendanceAction, EventDict, Frequency
 from ta_ml.utils.datetime import apply_timezone
 
 
