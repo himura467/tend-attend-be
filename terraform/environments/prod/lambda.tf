@@ -1,6 +1,5 @@
 module "lambda" {
   source                   = "../../modules/lambda"
-  ecr_repository_url       = module.ecr.repository_url
   lambda_timeout           = 60
   lambda_memory_size       = 128
   subnet_ids               = module.vpc.private_subnets[*].id
@@ -15,5 +14,4 @@ module "lambda" {
   common_dbname            = "tend_attend_common"
   sequence_dbname          = "tend_attend_sequence"
   shard_dbname_prefix      = "tend_attend_shard"
-  depends_on               = [module.ecr]
 }

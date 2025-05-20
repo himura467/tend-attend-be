@@ -40,13 +40,14 @@ resource "aws_iam_role_policy_attachment" "lambda_cloudwatch" {
 }
 
 resource "aws_lambda_function" "this" {
-  function_name = "tend-attend-lambda-function"
-  role          = aws_iam_role.lambda.arn
-  package_type  = "Image"
-  image_uri     = "${var.ecr_repository_url}:latest"
-  architectures = ["arm64"]
-  timeout       = var.lambda_timeout
-  memory_size   = var.lambda_memory_size
+  function_name    = "tend-attend-lambda-function"
+  role             = aws_iam_role.lambda.arn
+  filename         = "../app.zip"
+  source_code_hash = filebase64sha256("../app.zip")
+  handler          = "main.lambda_handler"
+  runtime          = "python3.10"
+  timeout          = var.lambda_timeout
+  memory_size      = var.lambda_memory_size
   vpc_config {
     subnet_ids         = var.subnet_ids
     security_group_ids = var.security_group_ids
