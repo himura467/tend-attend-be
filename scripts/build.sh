@@ -7,7 +7,7 @@ ROOT_DIR=$(cd $(dirname $0)/..; pwd)
 PYTHON_VERSION=$(cat ${ROOT_DIR}/ta-api/.python-version)
 
 rm -f python.zip app.zip
-bash ${ROOT_DIR}/scripts/export-requirements.sh
+bash ${ROOT_DIR}/scripts/export-requirements.sh ta-api
 docker build -f ${ROOT_DIR}/docker/server/Dockerfile \
   --build-arg PYTHON_VERSION=${PYTHON_VERSION} \
   --platform linux/amd64 \
