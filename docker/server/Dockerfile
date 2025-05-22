@@ -14,6 +14,7 @@ RUN yum update -y && \
   tar xzf Python-${PYTHON_VERSION}.tgz && \
   cd Python-${PYTHON_VERSION} && \
   ./configure --enable-optimizations --with-lto --prefix=${PYTHON_HOME} && \
+  make -j $(nproc) && \
   make altinstall && \
   cd .. && \
   rm -rf Python-${PYTHON_VERSION} Python-${PYTHON_VERSION}.tgz && \
