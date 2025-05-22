@@ -39,10 +39,22 @@ resource "aws_iam_role_policy_attachment" "lambda_cloudwatch" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
+resource "aws_s3_bucket" "lambda_layer" {
+  bucket = "tend-attend-lambda-layer"
+}
+
+resource "aws_s3_object" "lambda_layer" {
+  bucket = aws_s3_bucket.lambda_layer.id
+  key    = "python.zip"
+  source = "../../../python.zip"
+  etag   = filemd5("../../../python.zip")
+}
+
 resource "aws_lambda_layer_version" "python_libs" {
   layer_name          = "PythonLibs"
   compatible_runtimes = ["python3.10"]
-  filename            = "../../../python.zip"
+  s3_bucket           = aws_s3_bucket.lambda_layer.id
+  s3_key              = aws_s3_object.lambda_layer.key
   source_code_hash    = filebase64sha256("../../../python.zip")
 }
 
