@@ -39,13 +39,21 @@ resource "aws_iam_role_policy_attachment" "lambda_cloudwatch" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
+resource "aws_lambda_layer_version" "python_libs" {
+  layer_name          = "PythonLibs"
+  compatible_runtimes = ["python3.10"]
+  filename            = "../../../python.zip"
+  source_code_hash    = filebase64sha256("../../../python.zip")
+}
+
 resource "aws_lambda_function" "this" {
   function_name    = "tend-attend-lambda-function"
   role             = aws_iam_role.lambda.arn
-  filename         = "../app.zip"
-  source_code_hash = filebase64sha256("../app.zip")
-  handler          = "main.lambda_handler"
+  filename         = "../../../app.zip"
+  source_code_hash = filebase64sha256("../../../app.zip")
+  handler          = "app/main.lambda_handler"
   runtime          = "python3.10"
+  layers           = [aws_lambda_layer_version.python_libs.arn]
   timeout          = var.lambda_timeout
   memory_size      = var.lambda_memory_size
   vpc_config {
