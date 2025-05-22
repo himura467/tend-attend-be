@@ -4,13 +4,12 @@ set -e
 
 ROOT_DIR=$(cd $(dirname $0)/..; pwd)
 
-PYTHON_VERSION=$(cat ${ROOT_DIR}/.python-version)
+PYTHON_VERSION=$(cat ${ROOT_DIR}/ta-api/.python-version)
 
 rm -f app.zip
 docker build -f ${ROOT_DIR}/docker/server/Dockerfile \
   --build-arg PYTHON_VERSION=${PYTHON_VERSION} \
   --platform linux/amd64 \
-  --target python-libs \
   --no-cache \
   --provenance=false \
   -t tend-attend:latest ${ROOT_DIR} --progress=plain
