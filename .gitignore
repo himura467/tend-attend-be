@@ -164,6 +164,3 @@ cython_debug/
 
 # Checkpoints
 *.ckpt
-
-# requirements.txt
-requirements.txt
