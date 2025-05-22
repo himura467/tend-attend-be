@@ -166,4 +166,5 @@ cython_debug/
 *.ckpt
 
 # Lambda source code zip
+python.zip
 app.zip
