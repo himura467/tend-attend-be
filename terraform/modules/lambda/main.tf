@@ -52,7 +52,7 @@ resource "aws_s3_object" "lambda_layer" {
 
 resource "aws_lambda_layer_version" "python_libs" {
   layer_name          = "PythonLibs"
-  compatible_runtimes = ["python3.10"]
+  compatible_runtimes = ["python3.13"]
   s3_bucket           = aws_s3_bucket.lambda_layer.id
   s3_key              = aws_s3_object.lambda_layer.key
   source_code_hash    = filebase64sha256("../../../python.zip")
@@ -64,7 +64,7 @@ resource "aws_lambda_function" "this" {
   filename         = "../../../app.zip"
   source_code_hash = filebase64sha256("../../../app.zip")
   handler          = "app/main.lambda_handler"
-  runtime          = "python3.10"
+  runtime          = "python3.13"
   layers           = [aws_lambda_layer_version.python_libs.arn]
   timeout          = var.lambda_timeout
   memory_size      = var.lambda_memory_size
