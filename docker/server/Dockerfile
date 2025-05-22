@@ -13,7 +13,7 @@ RUN yum update -y && \
   wget https://www.python.org/ftp/python/${PYTHON_VERSION}/Python-${PYTHON_VERSION}.tgz && \
   tar xzf Python-${PYTHON_VERSION}.tgz && \
   cd Python-${PYTHON_VERSION} && \
-  ./configure --enable-optimizations --with-lto --prefix=${PYTHON_HOME} && \
+  ./configure --enable-optimizations --prefix=${PYTHON_HOME} && \
   make -j $(nproc) && \
   make altinstall && \
   cd .. && \
