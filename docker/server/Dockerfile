@@ -28,7 +28,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt --target python && \
   rm requirements.txt
 WORKDIR /app
-COPY ta-api/src/main.py ta-core/alembic.ini .
+COPY ta-api/src/main.py ta-core/alembic.ini ./
 COPY ta-api/src/ta_api ./ta_api
 COPY ta-core/src/ta_core ./ta_core
 COPY ta-core/alembic ./alembic
