@@ -4,8 +4,8 @@ from fastapi import FastAPI, Request, Response, status
 from mangum import Mangum
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from ta_api.constants import ALLOWED_ORIGINS
-from ta_api.routers import account, admin, auth, event, verify
+from ta_api import ALLOWED_ORIGINS
+from ta_api import account, admin, auth, event, verify
 
 app = FastAPI()
 
