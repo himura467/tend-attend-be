@@ -61,9 +61,9 @@ resource "aws_lambda_layer_version" "python_libs" {
 resource "aws_lambda_function" "this" {
   function_name    = "tend-attend-lambda-function"
   role             = aws_iam_role.lambda.arn
-  filename         = "../../../app.zip"
-  source_code_hash = filebase64sha256("../../../app.zip")
-  handler          = "app/main.lambda_handler"
+  filename         = "../../../main.zip"
+  source_code_hash = filebase64sha256("../../../main.zip")
+  handler          = "main.lambda_handler"
   runtime          = "python3.13"
   layers           = [aws_lambda_layer_version.python_libs.arn]
   timeout          = var.lambda_timeout

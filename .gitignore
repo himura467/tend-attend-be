@@ -167,4 +167,4 @@ cython_debug/
 
 # Lambda source code zip
 python.zip
-app.zip
+main.zip

@@ -6,7 +6,7 @@ ROOT_DIR=$(cd $(dirname $0)/..; pwd)
 
 PYTHON_VERSION=$(cat ${ROOT_DIR}/ta-api/.python-version)
 
-rm -f python.zip app.zip
+rm -f python.zip main.zip
 bash ${ROOT_DIR}/scripts/export-requirements.sh ta-api
 docker build -f ${ROOT_DIR}/docker/server/Dockerfile \
   --build-arg PYTHON_VERSION=${PYTHON_VERSION} \
@@ -18,7 +18,7 @@ CONTAINER_ID=$(docker create --platform linux/amd64 tend-attend:latest)
 docker cp "$CONTAINER_ID":/python ${ROOT_DIR}
 docker cp "$CONTAINER_ID":/app ${ROOT_DIR}
 docker rm -v "$CONTAINER_ID"
-zip --recurse-paths -X python.zip python -x "*/__pycache__/*"
-zip --recurse-paths -X app.zip app
+zip -r -X python.zip python -x "*/__pycache__/*"
+zip -r -X main.zip app/main.py
 rm -rf ${ROOT_DIR}/python ${ROOT_DIR}/app
 rm ${ROOT_DIR}/requirements.txt
