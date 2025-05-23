@@ -39,12 +39,12 @@ resource "aws_iam_role_policy_attachment" "lambda_cloudwatch" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
-resource "aws_s3_bucket" "lambda_layer" {
-  bucket = "tend-attend-lambda-layer"
+resource "aws_s3_bucket" "python_layer" {
+  bucket = "tend-attend-lambda-python-layer"
 }
 
-resource "aws_s3_object" "lambda_layer" {
-  bucket = aws_s3_bucket.lambda_layer.id
+resource "aws_s3_object" "python_layer" {
+  bucket = aws_s3_bucket.python_layer.id
   key    = "python.zip"
   source = "../../../python.zip"
   etag   = filemd5("../../../python.zip")
@@ -53,9 +53,16 @@ resource "aws_s3_object" "lambda_layer" {
 resource "aws_lambda_layer_version" "python_libs" {
   layer_name          = "PythonLibs"
   compatible_runtimes = ["python3.13"]
-  s3_bucket           = aws_s3_bucket.lambda_layer.id
-  s3_key              = aws_s3_object.lambda_layer.key
+  s3_bucket           = aws_s3_bucket.python_layer.id
+  s3_key              = aws_s3_object.python_layer.key
   source_code_hash    = filebase64sha256("../../../python.zip")
+}
+
+resource "aws_lambda_layer_version" "dependencies" {
+  layer_name          = "ProjectDependencies"
+  compatible_runtimes = ["python3.13"]
+  filename            = "../../../dependencies.zip"
+  source_code_hash    = filebase64sha256("../../../dependencies.zip")
 }
 
 resource "aws_lambda_function" "this" {
@@ -65,7 +72,7 @@ resource "aws_lambda_function" "this" {
   source_code_hash = filebase64sha256("../../../main.zip")
   handler          = "main.lambda_handler"
   runtime          = "python3.13"
-  layers           = [aws_lambda_layer_version.python_libs.arn]
+  layers           = [aws_lambda_layer_version.python_libs.arn, aws_lambda_layer_version.dependencies.arn]
   timeout          = var.lambda_timeout
   memory_size      = var.lambda_memory_size
   vpc_config {
