@@ -43,10 +43,10 @@ profile = "black"
 line_length = 88
 
 [tool.poe.tasks]
-mypy = "mypy --config-file ../mypy.ini src alembic tests"
-flake8 = "flake8 --config ../.flake8 src alembic tests"
-black = "black src alembic tests"
-isort = "isort src alembic tests"
+mypy = "mypy --config-file ../mypy.ini src tests"
+flake8 = "flake8 --config ../.flake8 src tests"
+black = "black src tests"
+isort = "isort src tests"
 lint = ["mypy", "flake8"]
 format = ["black", "isort"]
 test = "pytest tests"
