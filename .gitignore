@@ -165,5 +165,7 @@ cython_debug/
 # Checkpoints
 *.ckpt
 
-# requirements.txt
-requirements.txt
+# Lambda source code zip
+python.zip
+main.zip
+dependencies.zip

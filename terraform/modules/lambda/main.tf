@@ -39,14 +39,42 @@ resource "aws_iam_role_policy_attachment" "lambda_cloudwatch" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
+resource "aws_s3_bucket" "python_layer" {
+  bucket = "tend-attend-lambda-python-layer"
+}
+
+resource "aws_s3_object" "python_layer" {
+  bucket = aws_s3_bucket.python_layer.id
+  key    = "python.zip"
+  source = "../../../python.zip"
+  etag   = filemd5("../../../python.zip")
+}
+
+resource "aws_lambda_layer_version" "python_libs" {
+  layer_name          = "PythonLibs"
+  compatible_runtimes = ["python3.13"]
+  s3_bucket           = aws_s3_bucket.python_layer.id
+  s3_key              = aws_s3_object.python_layer.key
+  source_code_hash    = filebase64sha256("../../../python.zip")
+}
+
+resource "aws_lambda_layer_version" "dependencies" {
+  layer_name          = "ProjectDependencies"
+  compatible_runtimes = ["python3.13"]
+  filename            = "../../../dependencies.zip"
+  source_code_hash    = filebase64sha256("../../../dependencies.zip")
+}
+
 resource "aws_lambda_function" "this" {
-  function_name = "tend-attend-lambda-function"
-  role          = aws_iam_role.lambda.arn
-  package_type  = "Image"
-  image_uri     = "${var.ecr_repository_url}:latest"
-  architectures = ["arm64"]
-  timeout       = var.lambda_timeout
-  memory_size   = var.lambda_memory_size
+  function_name    = "tend-attend-lambda-function"
+  role             = aws_iam_role.lambda.arn
+  filename         = "../../../main.zip"
+  source_code_hash = filebase64sha256("../../../main.zip")
+  handler          = "main.lambda_handler"
+  runtime          = "python3.13"
+  layers           = [aws_lambda_layer_version.python_libs.arn, aws_lambda_layer_version.dependencies.arn]
+  timeout          = var.lambda_timeout
+  memory_size      = var.lambda_memory_size
   vpc_config {
     subnet_ids         = var.subnet_ids
     security_group_ids = var.security_group_ids

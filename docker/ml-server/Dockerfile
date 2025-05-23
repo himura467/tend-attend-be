@@ -1,5 +1,4 @@
 FROM python:3.10-slim-bookworm AS base
-
 RUN apt-get update && apt-get install --no-install-recommends -y \
   gcc \
   curl \
@@ -23,7 +22,8 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN curl -sSL https://install.python-poetry.org | python -
 COPY ta-ml/pyproject.toml ta-ml/poetry.lock ta-ml/main.py ta-ml/gunicorn.conf.py .
 COPY ta-ml/ta_ml ./ta_ml
-RUN poetry install --only main --no-root
+RUN poetry config virtualenvs.create false && \
+  poetry install --only main --no-root
 
 FROM base AS development
 EXPOSE 8000

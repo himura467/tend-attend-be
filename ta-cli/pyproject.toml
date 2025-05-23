@@ -1,24 +1,32 @@
-[tool.poetry]
+[project]
 name = "ta-cli"
 version = "0.1.0"
 description = ""
-authors = ["Your Name <you@example.com>"]
+authors = [
+    {name = "himura467",email = "mitarashidango0927@gmail.com"}
+]
 readme = "README.md"
+requires-python = ">=3.13,<4.0.0"
+dependencies = [
+    "typer[all] (>=0.15.4,<0.16.0)",
+    "ta-core @ file:///Users/himura/Desktop/tend-attend/tend-attend-be/ta-core"
+]
+
+[tool.poetry]
+packages = [{include = "ta_cli", from = "src"}]
 
 [tool.poetry.dependencies]
-python = "3.10.16"
-typer = {extras = ["all"], version = "^0.12.3"}
-ta-core = {path = "../ta-core", develop = true}
+ta-core = {develop = true}
 
 [tool.poetry.group.dev.dependencies]
-mypy = "^1.9.0"
-flake8 = "^7.0.0"
-black = "^24.3.0"
-isort = "^5.13.2"
-poethepoet = "^0.25.0"
+mypy = "^1.15.0"
+flake8 = "^7.2.0"
+black = "^25.1.0"
+isort = "^6.0.1"
+poethepoet = "^0.34.0"
 
 [build-system]
-requires = ["poetry-core"]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.isort]
@@ -26,12 +34,12 @@ profile = "black"
 line_length = 88
 
 [tool.poe.tasks]
-db-migration-print-ddl = "python main.py db-migration print-ddl"
-db-migration-migrate = "python main.py db-migration migrate"
-db-mock-attendance-log = "python main.py db-mock attendance-log"
-mypy = "mypy --config-file ../mypy.ini ta_cli tests main.py"
-flake8 = "flake8 --config ../.flake8 ta_cli tests main.py"
-black = "black ta_cli tests main.py"
-isort = "isort ta_cli tests main.py"
+db-migration-print-ddl = "python src/main.py db-migration print-ddl"
+db-migration-migrate = "python src/main.py db-migration migrate"
+db-mock-attendance-log = "python src/main.py db-mock attendance-log"
+mypy = "mypy --config-file ../mypy.ini src tests"
+flake8 = "flake8 --config ../.flake8 src tests"
+black = "black src tests"
+isort = "isort src tests"
 lint = ["mypy", "flake8"]
 format = ["black", "isort"]

@@ -21,6 +21,8 @@ class CORSMiddleware(BaseHTTPMiddleware):
             response = await call_next(request)
 
         origin = request.headers.get("origin")
+        if not origin:
+            return response
         if origin in ALLOWED_ORIGINS:
             response.headers["Access-Control-Allow-Origin"] = origin
             response.headers["Access-Control-Allow-Credentials"] = "true"

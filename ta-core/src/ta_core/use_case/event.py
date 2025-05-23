@@ -17,7 +17,10 @@ from ta_core.dtos.event import AttendanceTimeForecast as AttendanceTimeForecastD
 from ta_core.dtos.event import (
     AttendanceTimeForecastsWithUsername as AttendanceTimeForecastsWithUsernameDto,
 )
-from ta_core.dtos.event import AttendEventResponse, CreateEventResponse
+from ta_core.dtos.event import (
+    AttendEventResponse,
+    CreateEventResponse,
+)
 from ta_core.dtos.event import Event as EventDto
 from ta_core.dtos.event import EventWithId as EventWithIdDto
 from ta_core.dtos.event import (
@@ -57,7 +60,7 @@ T = TypeVar("T")
 
 
 def listify_byday(
-    byday: list[tuple[int, Weekday]] | None
+    byday: list[tuple[int, Weekday]] | None,
 ) -> list[list[int | Weekday]] | None:
     return [list(i) for i in byday] if byday is not None else None
 

@@ -2,19 +2,15 @@
 
 set -e
 
+if [[ $# -ne 1 ]]; then
+  echo "Usage: $0 <project>"
+  exit 1
+fi
+
 ROOT_DIR=$(cd $(dirname $0)/..; pwd)
 
-projects=(
-  "ta-api"
-  "ta-core"
-  "ta-ml"
-)
-
-for project in "${projects[@]}"; do
-  echo "Running export for ${project}"
-  cd ${ROOT_DIR}/${project}
-  poetry export -f requirements.txt -o requirements.txt --without-hashes
-done
-
-grep -hv "tend-attend" ${ROOT_DIR}/*/requirements.txt | sort -u -o ${ROOT_DIR}/requirements.txt
-rm ${ROOT_DIR}/*/requirements.txt
+echo "Running export for $1"
+cd ${ROOT_DIR}/$1
+poetry export -f requirements.txt -o requirements.txt --without-hashes
+sed -i '' '/^-e file:/d' requirements.txt
+mv requirements.txt "${ROOT_DIR}/requirements.txt"

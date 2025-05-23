@@ -1,8 +1,3 @@
-variable "ecr_repository_url" {
-  description = "URL of the Amazon ECR repository"
-  type        = string
-}
-
 variable "lambda_timeout" {
   description = "Timeout for the Lambda function in seconds"
   type        = number
