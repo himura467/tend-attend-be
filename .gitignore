@@ -168,3 +168,4 @@ cython_debug/
 # Lambda source code zip
 python.zip
 main.zip
+dependencies.zip

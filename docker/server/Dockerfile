@@ -24,11 +24,11 @@ RUN yum update -y && \
   yum clean all
 RUN ln -s ${PYTHON_HOME}/bin/python$(echo ${PYTHON_VERSION} | cut -d. -f1-2) ${PYTHON_HOME}/bin/python
 ENV PATH="${PYTHON_HOME}/bin:${PATH}"
+COPY ta-api/src/main.py ./
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt --target python && \
   rm requirements.txt
-WORKDIR /app
-COPY ta-api/src/main.py ta-core/alembic.ini ./
-COPY ta-api/src/ta_api ./ta_api
-COPY ta-core/src/ta_core ./ta_core
-COPY ta-core/alembic ./alembic
+COPY ta-api/src/ta_api ./dependencies/python/ta_api
+COPY ta-core/src/ta_core ./dependencies/python/ta_core
+COPY ta-core/src/alembic.ini ./dependencies/python/
+COPY ta-core/src/alembic ./dependencies/python/alembic
