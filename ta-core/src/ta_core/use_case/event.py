@@ -1,6 +1,5 @@
 from collections import defaultdict
 from datetime import date, datetime
-from typing import TypeVar
 from zoneinfo import ZoneInfo
 
 from ta_core.domain.entities.event import Event as EventEntity
@@ -54,8 +53,6 @@ from ta_core.infrastructure.sqlalchemy.repositories.event import (
 from ta_core.utils.datetime import validate_date
 from ta_core.utils.rfc5545 import parse_recurrence, serialize_recurrence
 from ta_core.utils.uuid import UUID, generate_uuid, str_to_uuid, uuid_to_str
-
-T = TypeVar("T")
 
 
 def listify_byday(
