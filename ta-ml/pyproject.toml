@@ -36,9 +36,9 @@ profile = "black"
 line_length = 88
 
 [tool.poe.tasks]
-mypy = "mypy --config-file ../mypy.ini ta_ml tests main.py gunicorn.conf.py"
-flake8 = "flake8 --config ../.flake8 ta_ml tests main.py gunicorn.conf.py"
-black = "black ta_ml tests main.py gunicorn.conf.py"
-isort = "isort ta_ml tests main.py gunicorn.conf.py"
+mypy = "mypy --config-file ../mypy.ini src tests"
+flake8 = "flake8 --config ../.flake8 src tests"
+black = "black src tests"
+isort = "isort src tests"
 lint = ["mypy", "flake8"]
 format = ["black", "isort"]
