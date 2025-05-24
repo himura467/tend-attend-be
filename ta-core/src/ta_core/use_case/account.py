@@ -1,9 +1,9 @@
-from dataclasses import dataclass
 from datetime import datetime
 
 from pydantic.networks import EmailStr
 
 from ta_core.cryptography.hash import PasswordHasher
+from ta_core.domain.use_case.base import IUseCase
 from ta_core.dtos.account import CreateUserAccountResponse
 from ta_core.dtos.account import FollowerInfo as FollowerInfoDto
 from ta_core.dtos.account import GetFollowersInfoResponse
@@ -12,14 +12,10 @@ from ta_core.features.account import Gender
 from ta_core.infrastructure.db.transaction import rollbackable
 from ta_core.infrastructure.sqlalchemy.models.sequences.sequence import SequenceUserId
 from ta_core.infrastructure.sqlalchemy.repositories.account import UserAccountRepository
-from ta_core.use_case.unit_of_work_base import IUnitOfWork
 from ta_core.utils.uuid import UUID, generate_uuid, uuid_to_str
 
 
-@dataclass(frozen=True)
-class AccountUseCase:
-    uow: IUnitOfWork
-
+class AccountUseCase(IUseCase):
     _password_hasher = PasswordHasher()
 
     @rollbackable

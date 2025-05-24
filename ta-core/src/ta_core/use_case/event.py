@@ -1,7 +1,5 @@
 from collections import defaultdict
-from dataclasses import dataclass
 from datetime import date, datetime
-from typing import TypeVar
 from zoneinfo import ZoneInfo
 
 from ta_core.domain.entities.event import Event as EventEntity
@@ -11,6 +9,7 @@ from ta_core.domain.entities.event import (
 from ta_core.domain.entities.event import (
     EventAttendanceForecast as EventAttendanceForecastEntity,
 )
+from ta_core.domain.use_case.base import IUseCase
 from ta_core.dtos.event import Attendance as AttendanceDto
 from ta_core.dtos.event import AttendancesWithUsername as AttendancesWithUsernameDto
 from ta_core.dtos.event import AttendanceTimeForecast as AttendanceTimeForecastDto
@@ -51,12 +50,9 @@ from ta_core.infrastructure.sqlalchemy.repositories.event import (
     RecurrenceRepository,
     RecurrenceRuleRepository,
 )
-from ta_core.use_case.unit_of_work_base import IUnitOfWork
 from ta_core.utils.datetime import validate_date
 from ta_core.utils.rfc5545 import parse_recurrence, serialize_recurrence
 from ta_core.utils.uuid import UUID, generate_uuid, str_to_uuid, uuid_to_str
-
-T = TypeVar("T")
 
 
 def listify_byday(
@@ -123,10 +119,7 @@ def serialize_events(events: set[EventEntity]) -> list[EventWithIdDto]:
     return event_dto_list
 
 
-@dataclass(frozen=True)
-class EventUseCase:
-    uow: IUnitOfWork
-
+class EventUseCase(IUseCase):
     @rollbackable
     async def create_event_async(
         self,

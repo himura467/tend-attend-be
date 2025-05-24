@@ -455,14 +455,14 @@ async def test_read_with_recurrence_by_user_ids_async(
             matching_created_event is not None
         ), f"Event {event.id} not found in created events"
 
-        created_event_data: dict[str, Any] = matching_created_event["event"]  # type: ignore[assignment]
+        created_event_data: dict[str, Any] = matching_created_event["event"]
         assert event.summary == created_event_data["summary"]
         assert event.location == created_event_data["location"]
         assert event.start == created_event_data["start"].replace(tzinfo=None)
         assert event.end == created_event_data["end"].replace(tzinfo=None)
         assert event.is_all_day == created_event_data["is_all_day"]
         assert event.timezone == created_event_data["timezone"]
-        assert event.recurrence_id == matching_created_event["recurrence"].id  # type: ignore[attr-defined]
+        assert event.recurrence_id == matching_created_event["recurrence"].id
         assert event.recurrence == matching_created_event["recurrence"]
 
 
@@ -608,14 +608,14 @@ async def test_read_all_with_recurrence_async(
             matching_event is not None
         ), f"Event {event.id} not found in expected events"
 
-        event_data = matching_event["event"]  # type: ignore[assignment]
+        event_data = matching_event["event"]
         assert event.summary == event_data["summary"]
         assert event.location == event_data["location"]
         assert event.start == event_data["start"].replace(tzinfo=None)
         assert event.end == event_data["end"].replace(tzinfo=None)
         assert event.is_all_day == event_data["is_all_day"]
         assert event.timezone == event_data["timezone"]
-        assert event.recurrence_id == matching_event["recurrence"].id  # type: ignore[attr-defined]
+        assert event.recurrence_id == matching_event["recurrence"].id
         assert event.recurrence == matching_event["recurrence"]
 
 
@@ -927,7 +927,7 @@ async def test_read_by_user_id_and_event_id_and_start_async(
         for log in created_logs
         if log["user_id"] == test_user_id
         and log["event_id"] == test_event_id
-        and log["data"]["start"] == test_start  # type: ignore[index]
+        and log["data"]["start"] == test_start
     ]
     assert len(fetched_logs) == len(expected_logs)
 
@@ -940,7 +940,7 @@ async def test_read_by_user_id_and_event_id_and_start_async(
 
         assert log.user_id == matching_log["user_id"]
         assert log.event_id == matching_log["event_id"]
-        matching_log_data: dict[str, Any] = matching_log["data"]  # type: ignore[assignment]
+        matching_log_data: dict[str, Any] = matching_log["data"]
         assert log.start == matching_log_data["start"].replace(tzinfo=None)
         assert log.action == matching_log_data["action"]
         assert log.acted_at == matching_log_data["acted_at"].replace(tzinfo=None)
@@ -1030,9 +1030,9 @@ async def test_read_latest_by_user_id_and_event_id_and_start_or_none_async(
         for log in created_logs
         if log["user_id"] == test_user_id
         and log["event_id"] == test_event_id
-        and log["data"]["start"] == test_start  # type: ignore[index]
+        and log["data"]["start"] == test_start
     ]
-    latest_created_log = max(test_logs, key=lambda x: x["data"]["acted_at"])  # type: ignore[index]
+    latest_created_log = max(test_logs, key=lambda x: x["data"]["acted_at"])
     latest_log = await event_attendance_action_log_repository.read_latest_by_user_id_and_event_id_and_start_or_none_async(
         user_id=test_user_id,
         event_id=test_event_id,
@@ -1043,7 +1043,7 @@ async def test_read_latest_by_user_id_and_event_id_and_start_or_none_async(
     assert latest_log.id == latest_created_log["id"]
     assert latest_log.user_id == latest_created_log["user_id"]
     assert latest_log.event_id == latest_created_log["event_id"]
-    latest_created_log_data: dict[str, Any] = latest_created_log["data"]  # type: ignore[assignment]
+    latest_created_log_data: dict[str, Any] = latest_created_log["data"]
     assert latest_log.start == latest_created_log_data["start"].replace(tzinfo=None)
     assert latest_log.action == latest_created_log_data["action"]
     assert latest_log.acted_at == latest_created_log_data["acted_at"].replace(

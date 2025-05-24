@@ -1,9 +1,9 @@
-from dataclasses import dataclass
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
 from pydantic.networks import EmailStr
 
+from ta_core.domain.use_case.base import IUseCase
 from ta_core.dtos.verify import RequestEmailVerificationResponse, VerifyEmailResponse
 from ta_core.error.error_code import ErrorCode
 from ta_core.infrastructure.db.transaction import rollbackable
@@ -11,15 +11,11 @@ from ta_core.infrastructure.sqlalchemy.repositories.account import UserAccountRe
 from ta_core.infrastructure.sqlalchemy.repositories.verify import (
     EmailVerificationRepository,
 )
-from ta_core.use_case.unit_of_work_base import IUnitOfWork
 from ta_core.utils.smtp import send_verification_email_async
 from ta_core.utils.uuid import generate_uuid
 
 
-@dataclass(frozen=True)
-class VerifyUseCase:
-    uow: IUnitOfWork
-
+class VerifyUseCase(IUseCase):
     _TOKEN_EXPIRES = timedelta(minutes=5)
 
     @rollbackable

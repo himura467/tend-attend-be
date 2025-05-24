@@ -1,11 +1,11 @@
 import random
-from dataclasses import dataclass
 from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
 from ta_core.domain.entities.event import (
     EventAttendanceActionLog as EventAttendanceActionLogEntity,
 )
+from ta_core.domain.use_case.base import IUseCase
 from ta_core.dtos.base import BaseModelWithErrorCodes
 from ta_core.features.account import Gender
 from ta_core.features.event import AttendanceAction, Frequency, Weekday
@@ -17,14 +17,10 @@ from ta_core.infrastructure.sqlalchemy.repositories.event import (
     RecurrenceRepository,
     RecurrenceRuleRepository,
 )
-from ta_core.use_case.unit_of_work_base import IUnitOfWork
 from ta_core.utils.uuid import generate_uuid
 
 
-@dataclass(frozen=True)
-class DevelopUseCase:
-    uow: IUnitOfWork
-
+class DevelopUseCase(IUseCase):
     @rollbackable
     async def mock_user_attendance_sequence_async(self) -> BaseModelWithErrorCodes:
         user_account_repository = UserAccountRepository(self.uow)
