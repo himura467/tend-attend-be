@@ -1,23 +1,19 @@
-from dataclasses import dataclass
 from datetime import timedelta
 
 from ta_core.constants.secrets import JWT_SECRET_KEY
 from ta_core.cryptography.hash import PasswordHasher
 from ta_core.cryptography.jwt import JWTCryptography
+from ta_core.domain.use_case.base import IUseCase
 from ta_core.dtos.auth import AuthTokenResponse
 from ta_core.error.error_code import ErrorCode
 from ta_core.features.account import Account, Group
 from ta_core.features.auth import TokenType
 from ta_core.infrastructure.db.transaction import rollbackable
 from ta_core.infrastructure.sqlalchemy.repositories.account import UserAccountRepository
-from ta_core.use_case.unit_of_work_base import IUnitOfWork
 
 
-@dataclass(frozen=True)
-class AuthUseCase:
+class AuthUseCase(IUseCase):
     assert JWT_SECRET_KEY is not None
-
-    uow: IUnitOfWork
 
     _ALGORITHM = "HS256"
     _ACCESS_TOKEN_EXPIRES = timedelta(minutes=60)
