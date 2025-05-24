@@ -7,7 +7,7 @@ from ta_core.features.account import Account, Role, groupRoleMap
 from ta_core.features.auth import TokenType
 from ta_core.infrastructure.sqlalchemy.db import get_db_async
 from ta_core.infrastructure.sqlalchemy.unit_of_work import SqlalchemyUnitOfWork
-from ta_core.use_case.auth import AuthUseCase
+from ta_core.usecase.auth import AuthUsecase
 
 from ta_api.constants import ACCESS_TOKEN_NAME
 
@@ -36,9 +36,9 @@ class AccessControl:
         session: AsyncSession = Depends(get_db_async),
     ) -> Account:
         uow = SqlalchemyUnitOfWork(session=session)
-        use_case = AuthUseCase(uow=uow)
+        usecase = AuthUsecase(uow=uow)
 
-        account = await use_case.get_account_by_token(token, TokenType.ACCESS)
+        account = await usecase.get_account_by_token(token, TokenType.ACCESS)
         if account is None:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,

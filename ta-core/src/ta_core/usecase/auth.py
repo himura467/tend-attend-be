@@ -3,7 +3,7 @@ from datetime import timedelta
 from ta_core.constants.secrets import JWT_SECRET_KEY
 from ta_core.cryptography.hash import PasswordHasher
 from ta_core.cryptography.jwt import JWTCryptography
-from ta_core.domain.use_case.base import IUseCase
+from ta_core.domain.usecase.base import IUsecase
 from ta_core.dtos.auth import AuthTokenResponse
 from ta_core.error.error_code import ErrorCode
 from ta_core.features.account import Account, Group
@@ -12,7 +12,7 @@ from ta_core.infrastructure.db.transaction import rollbackable
 from ta_core.infrastructure.sqlalchemy.repositories.account import UserAccountRepository
 
 
-class AuthUseCase(IUseCase):
+class AuthUsecase(IUsecase):
     assert JWT_SECRET_KEY is not None
 
     _ALGORITHM = "HS256"

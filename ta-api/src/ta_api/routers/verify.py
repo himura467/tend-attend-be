@@ -8,7 +8,7 @@ from ta_core.dtos.verify import (
 )
 from ta_core.infrastructure.sqlalchemy.db import get_db_async
 from ta_core.infrastructure.sqlalchemy.unit_of_work import SqlalchemyUnitOfWork
-from ta_core.use_case.verify import VerifyUseCase
+from ta_core.usecase.verify import VerifyUsecase
 
 router = APIRouter()
 
@@ -25,9 +25,9 @@ async def request_email_verification(
     email = req.email
 
     uow = SqlalchemyUnitOfWork(session=session)
-    use_case = VerifyUseCase(uow=uow)
+    usecase = VerifyUsecase(uow=uow)
 
-    return await use_case.request_email_verification_async(email=email)
+    return await usecase.request_email_verification_async(email=email)
 
 
 @router.post(
@@ -43,8 +43,8 @@ async def verify_email(
     verification_token = req.verification_token
 
     uow = SqlalchemyUnitOfWork(session=session)
-    use_case = VerifyUseCase(uow=uow)
+    usecase = VerifyUsecase(uow=uow)
 
-    return await use_case.verify_email_async(
+    return await usecase.verify_email_async(
         email=email, verification_token=verification_token
     )
