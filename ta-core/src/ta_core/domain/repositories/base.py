@@ -1,25 +1,24 @@
 from abc import ABCMeta, abstractmethod
-from typing import Any, Generic, Protocol, Type, TypeVar
+from typing import Any, Protocol, Type
 
 from sqlalchemy.orm.base import Mapped
 
 from ta_core.domain.entities.base import IEntity
 from ta_core.utils.uuid import UUID
 
-TEntity = TypeVar("TEntity", bound=IEntity)
-TModel = TypeVar("TModel", bound="ModelProtocol[Any]")
 
-
-class ModelProtocol(Protocol[TEntity]):
+class ModelProtocol[TEntity: IEntity](Protocol):
     id: Mapped[bytes]
 
     def to_entity(self) -> TEntity: ...
 
     @classmethod
-    def from_entity(cls: Type[TModel], entity: TEntity) -> TModel: ...
+    def from_entity(
+        cls: Type["ModelProtocol[TEntity]"], entity: TEntity
+    ) -> "ModelProtocol[TEntity]": ...
 
 
-class IRepository(Generic[TEntity, TModel], metaclass=ABCMeta):
+class IRepository[TEntity: IEntity, TModel: ModelProtocol[Any]](metaclass=ABCMeta):
     @abstractmethod
     async def create_async(self, entity: TEntity) -> TEntity | None:
         raise NotImplementedError()
