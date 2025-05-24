@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, Iterable, Optional, Tuple, TypeVar, Union
+from typing import Any, Iterable, Optional, Tuple, Union
 
 from sqlalchemy.orm.mapper import Mapper
 from sqlalchemy.orm.session import ORMExecuteState
@@ -14,11 +14,9 @@ from ta_core.infrastructure.db.settings import (
     SHARD_DB_CONNECTION_KEYS,
 )
 
-_T = TypeVar("_T", bound=Any)
 
-
-def shard_chooser(
-    mapper: Optional[Mapper[_T]], instance: Any, clause: Optional[ClauseElement] = None
+def shard_chooser[T](
+    mapper: Optional[Mapper[T]], instance: Any, clause: Optional[ClauseElement] = None
 ) -> Any:
     shard_ids: set[str] = mapper.local_table.info.get("shard_ids") if mapper else set()  # type: ignore[attr-defined]
     if shard_ids == {COMMON_DB_CONNECTION_KEY}:
@@ -31,8 +29,8 @@ def shard_chooser(
     raise NotImplementedError()
 
 
-def identity_chooser(
-    mapper: Mapper[_T],
+def identity_chooser[T](
+    mapper: Mapper[T],
     primary_key: Union[Any, Tuple[Any, ...]],
     *,
     lazy_loaded_from: Optional[InstanceState[Any]],
