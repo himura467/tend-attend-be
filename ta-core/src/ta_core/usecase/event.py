@@ -9,7 +9,7 @@ from ta_core.domain.entities.event import (
 from ta_core.domain.entities.event import (
     EventAttendanceForecast as EventAttendanceForecastEntity,
 )
-from ta_core.domain.use_case.base import IUseCase
+from ta_core.domain.usecase.base import IUsecase
 from ta_core.dtos.event import Attendance as AttendanceDto
 from ta_core.dtos.event import AttendancesWithUsername as AttendancesWithUsernameDto
 from ta_core.dtos.event import AttendanceTimeForecast as AttendanceTimeForecastDto
@@ -119,7 +119,7 @@ def serialize_events(events: set[EventEntity]) -> list[EventWithIdDto]:
     return event_dto_list
 
 
-class EventUseCase(IUseCase):
+class EventUsecase(IUsecase):
     @rollbackable
     async def create_event_async(
         self,

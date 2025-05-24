@@ -8,7 +8,7 @@ from ta_core.dtos.account import (
 from ta_core.features.account import Account, Role
 from ta_core.infrastructure.sqlalchemy.db import get_db_async
 from ta_core.infrastructure.sqlalchemy.unit_of_work import SqlalchemyUnitOfWork
-from ta_core.use_case.account import AccountUseCase
+from ta_core.usecase.account import AccountUsecase
 
 from ta_api.dependencies import AccessControl
 
@@ -30,9 +30,9 @@ async def create_user_account(
     followee_usernames = req.followee_usernames
 
     uow = SqlalchemyUnitOfWork(session=session)
-    use_case = AccountUseCase(uow=uow)
+    usecase = AccountUsecase(uow=uow)
 
-    return await use_case.create_user_account_async(
+    return await usecase.create_user_account_async(
         username=username,
         password=password,
         nickname=nickname,
@@ -53,6 +53,6 @@ async def get_followers_info(
     account: Account = Depends(AccessControl(permit={Role.HOST})),
 ) -> GetFollowersInfoResponse:
     uow = SqlalchemyUnitOfWork(session=session)
-    use_case = AccountUseCase(uow=uow)
+    usecase = AccountUsecase(uow=uow)
 
-    return await use_case.get_followers_info_async(followee_id=account.account_id)
+    return await usecase.get_followers_info_async(followee_id=account.account_id)

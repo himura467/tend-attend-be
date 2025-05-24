@@ -4,5 +4,5 @@ from ta_core.domain.unit_of_work.base import IUnitOfWork
 
 
 @dataclass(frozen=True)
-class IUseCase:
+class IUsecase:
     uow: IUnitOfWork

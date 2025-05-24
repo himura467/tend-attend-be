@@ -19,7 +19,7 @@ from ta_core.dtos.event import (
 from ta_core.features.account import Account, Role
 from ta_core.infrastructure.sqlalchemy.db import get_db_async
 from ta_core.infrastructure.sqlalchemy.unit_of_work import SqlalchemyUnitOfWork
-from ta_core.use_case.event import EventUseCase
+from ta_core.usecase.event import EventUsecase
 
 from ta_api.dependencies import AccessControl
 
@@ -39,9 +39,9 @@ async def create_event(
     event = req.event
 
     uow = SqlalchemyUnitOfWork(session=session)
-    use_case = EventUseCase(uow=uow)
+    usecase = EventUsecase(uow=uow)
 
-    return await use_case.create_event_async(
+    return await usecase.create_event_async(
         host_id=account.account_id,
         event_dto=event,
     )
@@ -62,9 +62,9 @@ async def attend_event(
     action = req.action
 
     uow = SqlalchemyUnitOfWork(session=session)
-    use_case = EventUseCase(uow=uow)
+    usecase = EventUsecase(uow=uow)
 
-    return await use_case.attend_event_async(
+    return await usecase.attend_event_async(
         guest_id=account.account_id,
         event_id_str=event_id,
         start=start,
@@ -87,9 +87,9 @@ async def update_attendances(
     attendances = req.attendances
 
     uow = SqlalchemyUnitOfWork(session=session)
-    use_case = EventUseCase(uow=uow)
+    usecase = EventUsecase(uow=uow)
 
-    return await use_case.update_attendances_async(
+    return await usecase.update_attendances_async(
         guest_id=account.account_id,
         event_id_str=event_id,
         start=start,
@@ -109,9 +109,9 @@ async def get_attendance_history(
     account: Account = Depends(AccessControl(permit={Role.GUEST})),
 ) -> GetAttendanceHistoryResponse:
     uow = SqlalchemyUnitOfWork(session=session)
-    use_case = EventUseCase(uow=uow)
+    usecase = EventUsecase(uow=uow)
 
-    return await use_case.get_attendance_history_async(
+    return await usecase.get_attendance_history_async(
         guest_id=account.account_id,
         event_id_str=event_id,
         start=start,
@@ -128,9 +128,9 @@ async def get_my_events(
     account: Account = Depends(AccessControl(permit={Role.HOST})),
 ) -> GetMyEventsResponse:
     uow = SqlalchemyUnitOfWork(session=session)
-    use_case = EventUseCase(uow=uow)
+    usecase = EventUsecase(uow=uow)
 
-    return await use_case.get_my_events_async(account_id=account.account_id)
+    return await usecase.get_my_events_async(account_id=account.account_id)
 
 
 @router.get(
@@ -143,9 +143,9 @@ async def get_following_events(
     account: Account = Depends(AccessControl(permit={Role.GUEST})),
 ) -> GetFollowingEventsResponse:
     uow = SqlalchemyUnitOfWork(session=session)
-    use_case = EventUseCase(uow=uow)
+    usecase = EventUsecase(uow=uow)
 
-    return await use_case.get_following_events_async(follower_id=account.account_id)
+    return await usecase.get_following_events_async(follower_id=account.account_id)
 
 
 @router.get(
@@ -160,9 +160,9 @@ async def get_guest_attendance_status(
     account: Account = Depends(AccessControl(permit={Role.GUEST})),
 ) -> GetGuestAttendanceStatusResponse:
     uow = SqlalchemyUnitOfWork(session=session)
-    use_case = EventUseCase(uow=uow)
+    usecase = EventUsecase(uow=uow)
 
-    return await use_case.get_guest_attendance_status_async(
+    return await usecase.get_guest_attendance_status_async(
         guest_id=account.account_id,
         event_id_str=event_id,
         start=start,
@@ -178,9 +178,9 @@ async def forecast_attendance_time(
     session: AsyncSession = Depends(get_db_async),
 ) -> ForecastAttendanceTimeResponse:
     uow = SqlalchemyUnitOfWork(session=session)
-    use_case = EventUseCase(uow=uow)
+    usecase = EventUsecase(uow=uow)
 
-    return await use_case.forecast_attendance_time_async()
+    return await usecase.forecast_attendance_time_async()
 
 
 @router.get(
@@ -193,8 +193,8 @@ async def get_attendance_time_forecasts(
     account: Account = Depends(AccessControl(permit={Role.GUEST})),
 ) -> GetAttendanceTimeForecastsResponse:
     uow = SqlalchemyUnitOfWork(session=session)
-    use_case = EventUseCase(uow=uow)
+    usecase = EventUsecase(uow=uow)
 
-    return await use_case.get_attendance_time_forecasts_async(
+    return await usecase.get_attendance_time_forecasts_async(
         account_id=account.account_id,
     )

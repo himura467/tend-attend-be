@@ -3,7 +3,7 @@ from datetime import datetime
 from pydantic.networks import EmailStr
 
 from ta_core.cryptography.hash import PasswordHasher
-from ta_core.domain.use_case.base import IUseCase
+from ta_core.domain.usecase.base import IUsecase
 from ta_core.dtos.account import CreateUserAccountResponse
 from ta_core.dtos.account import FollowerInfo as FollowerInfoDto
 from ta_core.dtos.account import GetFollowersInfoResponse
@@ -15,7 +15,7 @@ from ta_core.infrastructure.sqlalchemy.repositories.account import UserAccountRe
 from ta_core.utils.uuid import UUID, generate_uuid, uuid_to_str
 
 
-class AccountUseCase(IUseCase):
+class AccountUsecase(IUsecase):
     _password_hasher = PasswordHasher()
 
     @rollbackable

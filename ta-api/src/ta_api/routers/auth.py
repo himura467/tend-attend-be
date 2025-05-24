@@ -10,7 +10,7 @@ from ta_core.dtos.auth import (
 )
 from ta_core.infrastructure.sqlalchemy.db import get_db_async
 from ta_core.infrastructure.sqlalchemy.unit_of_work import SqlalchemyUnitOfWork
-from ta_core.use_case.auth import AuthUseCase
+from ta_core.usecase.auth import AuthUsecase
 
 from ta_api.constants import ACCESS_TOKEN_NAME, COOKIE_DOMAIN, REFRESH_TOKEN_NAME
 
@@ -31,9 +31,9 @@ async def create_auth_token(
     password = form_data.password
 
     uow = SqlalchemyUnitOfWork(session=session)
-    use_case = AuthUseCase(uow=uow)
+    usecase = AuthUsecase(uow=uow)
 
-    res = await use_case.auth_user_async(username=username, password=password)
+    res = await usecase.auth_user_async(username=username, password=password)
     if res.auth_token is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -82,9 +82,9 @@ async def refresh_auth_token(
     refresh_token = req.refresh_token
 
     uow = SqlalchemyUnitOfWork(session=session)
-    use_case = AuthUseCase(uow=uow)
+    usecase = AuthUsecase(uow=uow)
 
-    res = await use_case.refresh_auth_token_async(refresh_token=refresh_token)
+    res = await usecase.refresh_auth_token_async(refresh_token=refresh_token)
     if res.auth_token is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

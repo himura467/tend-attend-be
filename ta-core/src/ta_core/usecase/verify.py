@@ -3,7 +3,7 @@ from zoneinfo import ZoneInfo
 
 from pydantic.networks import EmailStr
 
-from ta_core.domain.use_case.base import IUseCase
+from ta_core.domain.usecase.base import IUsecase
 from ta_core.dtos.verify import RequestEmailVerificationResponse, VerifyEmailResponse
 from ta_core.error.error_code import ErrorCode
 from ta_core.infrastructure.db.transaction import rollbackable
@@ -15,7 +15,7 @@ from ta_core.utils.smtp import send_verification_email_async
 from ta_core.utils.uuid import generate_uuid
 
 
-class VerifyUseCase(IUseCase):
+class VerifyUsecase(IUsecase):
     _TOKEN_EXPIRES = timedelta(minutes=5)
 
     @rollbackable
