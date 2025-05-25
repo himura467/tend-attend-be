@@ -1,5 +1,5 @@
 resource "aws_ecr_repository" "tend_attend_repo" {
-  name         = "tend-attend"
+  name         = var.server_repository
   force_delete = true
 }
 
