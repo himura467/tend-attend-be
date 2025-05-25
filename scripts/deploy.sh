@@ -14,5 +14,6 @@ ROOT_DIR=$(cd $(dirname $0)/..; pwd)
 cd $ROOT_DIR/terraform/environments/$2
 
 terraform init
-# Force update of Lambda function by targeting the source_code_hash
-terraform apply -replace="module.lambda.aws_lambda_function.this"
+terraform apply \
+  # Force update of Lambda function by targeting the source_code_hash
+  -replace="module.lambda.aws_lambda_function.this"
