@@ -10,6 +10,9 @@ resource "google_cloud_run_v2_service" "ml_server" {
   template {
     containers {
       image = var.cloud_run_image_url
+      ports {
+        container_port = 8000
+      }
     }
     scaling {
       min_instance_count = var.cloud_run_min_instance_count
