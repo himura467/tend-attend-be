@@ -13,8 +13,8 @@ docker build -f ${ROOT_DIR}/docker/server/Dockerfile \
   --platform linux/amd64 \
   --no-cache \
   --provenance=false \
-  -t tend-attend:latest ${ROOT_DIR} --progress=plain
-CONTAINER_ID=$(docker create --platform linux/amd64 tend-attend:latest)
+  -t tend-attend-server:latest ${ROOT_DIR} --progress=plain
+CONTAINER_ID=$(docker create --platform linux/amd64 tend-attend-server:latest)
 docker cp "$CONTAINER_ID":/python ${ROOT_DIR}
 docker cp "$CONTAINER_ID":/main.py ${ROOT_DIR}
 docker cp "$CONTAINER_ID":/dependencies ${ROOT_DIR}
