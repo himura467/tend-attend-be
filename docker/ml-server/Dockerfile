@@ -20,8 +20,8 @@ RUN python -m pip install --upgrade pip setuptools wheel
 WORKDIR /app
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN curl -sSL https://install.python-poetry.org | python -
-COPY ta-ml/pyproject.toml ta-ml/poetry.lock ta-ml/main.py ta-ml/gunicorn.conf.py .
-COPY ta-ml/ta_ml ./ta_ml
+COPY ta-ml/pyproject.toml ta-ml/poetry.lock ta-ml/src/main.py ta-ml/src/gunicorn.conf.py ./
+COPY ta-ml/src/ta_ml ./ta_ml
 RUN poetry config virtualenvs.create false && \
   poetry install --only main --no-root
 
