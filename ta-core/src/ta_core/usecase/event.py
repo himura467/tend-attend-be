@@ -577,7 +577,7 @@ class EventUsecase(IUsecase):
                 response = await client.post(
                     f"{ML_SERVER_URL}/forecast/attendance",
                     json=request.model_dump(),
-                    timeout=60,  # Set reasonable timeout
+                    timeout=600,  # Set reasonable timeout
                 )
                 response.raise_for_status()  # Raise exception for 4xx/5xx status codes
                 forecast_result = ForecastAttendanceTimeResponse.model_validate(

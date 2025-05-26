@@ -30,6 +30,7 @@ resource "google_cloud_run_v2_service" "ml_server" {
       min_instance_count = var.cloud_run_min_instance_count
       max_instance_count = var.cloud_run_max_instance_count
     }
+    timeout = 600
   }
   depends_on = [google_project_service.cloud_run_admin_api]
 }
