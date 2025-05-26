@@ -6,9 +6,9 @@ from sqlalchemy.orm.base import Mapped
 from sqlalchemy.orm.decl_api import declared_attr
 from sqlalchemy.sql import select
 
+from ta_core.domain.unit_of_work.base import IUnitOfWork
 from ta_core.infrastructure.db.settings import SEQUENCE_DB_CONNECTION_KEY
 from ta_core.infrastructure.sqlalchemy.models.base import AbstractBase
-from ta_core.use_case.unit_of_work_base import IUnitOfWork
 
 
 class AbstractSequenceBase(AbstractBase):
