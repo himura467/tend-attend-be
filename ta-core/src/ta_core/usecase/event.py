@@ -34,6 +34,13 @@ from ta_core.dtos.event import (
     GetMyEventsResponse,
     UpdateAttendancesResponse,
 )
+from ta_core.dtos.ml_dto.account import UserAccount as UserAccountMLDto
+from ta_core.dtos.ml_dto.event import Event as EventMLDto
+from ta_core.dtos.ml_dto.event import (
+    EventAttendanceActionLog as EventAttendanceActionLogMLDto,
+)
+from ta_core.dtos.ml_dto.event import Recurrence as RecurrenceMLDto
+from ta_core.dtos.ml_dto.event import RecurrenceRule as RecurrenceRuleMLDto
 from ta_core.dtos.ml_dto.forecast import (
     ForecastAttendanceTimeRequest,
 )
@@ -512,11 +519,59 @@ class EventUsecase(IUsecase):
         user_data = await user_account_repository.read_all_async(where=[])
 
         try:
+            earliest_attend_dtos = [
+                EventAttendanceActionLogMLDto(
+                    id=uuid_to_str(log.id),
+                    user_id=log.user_id,
+                    event_id=uuid_to_str(log.event_id),
+                    start=log.start,
+                    action=log.action,
+                    acted_at=log.acted_at,
+                )
+                for log in earliest_attend_data
+            ]
+            latest_leave_dtos = [
+                EventAttendanceActionLogMLDto(
+                    id=uuid_to_str(log.id),
+                    user_id=log.user_id,
+                    event_id=uuid_to_str(log.event_id),
+                    start=log.start,
+                    action=log.action,
+                    acted_at=log.acted_at,
+                )
+                for log in latest_leave_data
+            ]
+            event_dtos = [
+                EventMLDto(
+                    id=uuid_to_str(event.id),
+                    user_id=event.user_id,
+                    start=event.start,
+                    end=event.end,
+                    timezone=event.timezone,
+                    recurrence=RecurrenceMLDto(
+                        id=uuid_to_str(event.recurrence.id),
+                        rrule=RecurrenceRuleMLDto(
+                            id=uuid_to_str(event.recurrence.rrule.id),
+                            freq=event.recurrence.rrule.freq,
+                        ),
+                    ),
+                )
+                for event in event_data
+            ]
+            user_dtos = [
+                UserAccountMLDto(
+                    id=uuid_to_str(user.id),
+                    user_id=user.user_id,
+                    birth_date=user.birth_date,
+                    gender=user.gender,
+                )
+                for user in user_data
+            ]
             request = ForecastAttendanceTimeRequest(
-                earliest_attend_data=list(earliest_attend_data),
-                latest_leave_data=list(latest_leave_data),
-                event_data=list(event_data),
-                user_data=list(user_data),
+                earliest_attend_data=earliest_attend_dtos,
+                latest_leave_data=latest_leave_dtos,
+                event_data=event_dtos,
+                user_data=user_dtos,
             )
             async with httpx.AsyncClient() as client:
                 response = await client.post(
