@@ -18,11 +18,6 @@ resource "google_cloud_run_v2_service" "ml_server" {
           port = var.cloud_run_container_port
         }
       }
-      liveness_probe {
-        tcp_socket {
-          port = var.cloud_run_container_port
-        }
-      }
     }
     scaling {
       min_instance_count = var.cloud_run_min_instance_count
