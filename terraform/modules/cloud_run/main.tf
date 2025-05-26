@@ -11,7 +11,17 @@ resource "google_cloud_run_v2_service" "ml_server" {
     containers {
       image = var.cloud_run_image_url
       ports {
-        container_port = 8000
+        container_port = var.cloud_run_container_port
+      }
+      startup_probe {
+        tcp_socket {
+          port = var.cloud_run_container_port
+        }
+      }
+      liveness_probe {
+        tcp_socket {
+          port = var.cloud_run_container_port
+        }
       }
     }
     scaling {
