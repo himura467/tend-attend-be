@@ -7,4 +7,9 @@
       "path": "terraform"
     }
   ],
+  "extensions": {
+    "recommendations": [
+      "hashicorp.terraform"
+    ]
+  }
 }
