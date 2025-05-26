@@ -26,7 +26,7 @@ rm -rf ${ROOT_DIR}/python ${ROOT_DIR}/main.py ${ROOT_DIR}/dependencies ${ROOT_DI
 
 # ML Server build
 docker build -f ${ROOT_DIR}/docker/ml-server/Dockerfile \
-  --target production \
+  --target development \
   --platform linux/amd64 \
   --no-cache \
   --provenance=false \
