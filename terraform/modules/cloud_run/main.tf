@@ -18,6 +18,12 @@ resource "google_cloud_run_v2_service" "ml_server" {
           port = var.cloud_run_container_port
         }
       }
+      resources {
+        limits = {
+          cpu    = "1"
+          memory = "512Mi"
+        }
+      }
     }
     scaling {
       min_instance_count = var.cloud_run_min_instance_count
