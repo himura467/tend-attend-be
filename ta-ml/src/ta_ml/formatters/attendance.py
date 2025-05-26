@@ -84,8 +84,8 @@ def get_formatted_attendance_data(
             "start": event.start,
             "end": event.end,
             "duration": event.end - event.start,
-            "freq": event.recurrence.rrule.freq,
-            "stl_period": freq_to_stl_period(event.recurrence.rrule.freq),
+            "freq": event.recurrence["rrule"]["freq"],
+            "stl_period": freq_to_stl_period(event.recurrence["rrule"]["freq"]),
         }
     user_dict = {
         user.user_id: {
