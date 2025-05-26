@@ -14,6 +14,7 @@ resource "google_cloud_run_v2_service" "ml_server" {
         container_port = var.cloud_run_container_port
       }
       startup_probe {
+        initial_delay_seconds = 5
         tcp_socket {
           port = var.cloud_run_container_port
         }
