@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - develop
+      - bugfix/release-pr
 
 jobs:
   release-pr:
