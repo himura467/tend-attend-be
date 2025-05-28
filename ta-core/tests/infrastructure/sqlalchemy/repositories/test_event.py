@@ -455,14 +455,14 @@ async def test_read_with_recurrence_by_user_ids_async(
             matching_created_event is not None
         ), f"Event {event.id} not found in created events"
 
-        created_event_data: dict[str, Any] = matching_created_event["event"]  # type: ignore[assignment]
+        created_event_data: dict[str, Any] = matching_created_event["event"]
         assert event.summary == created_event_data["summary"]
         assert event.location == created_event_data["location"]
         assert event.start == created_event_data["start"].replace(tzinfo=None)
         assert event.end == created_event_data["end"].replace(tzinfo=None)
         assert event.is_all_day == created_event_data["is_all_day"]
         assert event.timezone == created_event_data["timezone"]
-        assert event.recurrence_id == matching_created_event["recurrence"].id  # type: ignore[attr-defined]
+        assert event.recurrence_id == matching_created_event["recurrence"].id
         assert event.recurrence == matching_created_event["recurrence"]
 
 
@@ -590,7 +590,7 @@ async def test_read_all_with_recurrence_async(
                 }
             )
 
-    fetched_events = await event_repository.read_all_with_recurrence_async(where=())
+    fetched_events = await event_repository.read_all_with_recurrence_async(where=[])
     assert len(fetched_events) == sum(
         len(user_events) for user_events in events_by_user.values()
     )
@@ -608,14 +608,14 @@ async def test_read_all_with_recurrence_async(
             matching_event is not None
         ), f"Event {event.id} not found in expected events"
 
-        event_data = matching_event["event"]  # type: ignore[assignment]
+        event_data = matching_event["event"]
         assert event.summary == event_data["summary"]
         assert event.location == event_data["location"]
         assert event.start == event_data["start"].replace(tzinfo=None)
         assert event.end == event_data["end"].replace(tzinfo=None)
         assert event.is_all_day == event_data["is_all_day"]
         assert event.timezone == event_data["timezone"]
-        assert event.recurrence_id == matching_event["recurrence"].id  # type: ignore[attr-defined]
+        assert event.recurrence_id == matching_event["recurrence"].id
         assert event.recurrence == matching_event["recurrence"]
 
 
@@ -809,15 +809,15 @@ async def test_bulk_create_event_attendance_action_logs_async(
     event_attendance_action_log_repository = EventAttendanceActionLogRepository(uow)
 
     await event_attendance_action_log_repository.bulk_create_event_attendance_action_logs_async(
-        event_attendance_action_logs
+        set(event_attendance_action_logs)
     )
     ordered_logs = (
         await event_attendance_action_log_repository.read_order_by_limit_async(
-            where=(
+            where=[
                 EventAttendanceActionLog.user_id == 0,
                 EventAttendanceActionLog.event_id == uuid_to_bin(test_event_id),
                 EventAttendanceActionLog.start == datetime(2000, 1, 1, 0, 0, 0),
-            ),
+            ],
             order_by=EventAttendanceActionLog.acted_at.asc(),
             limit=3,
         )
@@ -927,7 +927,7 @@ async def test_read_by_user_id_and_event_id_and_start_async(
         for log in created_logs
         if log["user_id"] == test_user_id
         and log["event_id"] == test_event_id
-        and log["data"]["start"] == test_start  # type: ignore[index]
+        and log["data"]["start"] == test_start
     ]
     assert len(fetched_logs) == len(expected_logs)
 
@@ -940,7 +940,7 @@ async def test_read_by_user_id_and_event_id_and_start_async(
 
         assert log.user_id == matching_log["user_id"]
         assert log.event_id == matching_log["event_id"]
-        matching_log_data: dict[str, Any] = matching_log["data"]  # type: ignore[assignment]
+        matching_log_data: dict[str, Any] = matching_log["data"]
         assert log.start == matching_log_data["start"].replace(tzinfo=None)
         assert log.action == matching_log_data["action"]
         assert log.acted_at == matching_log_data["acted_at"].replace(tzinfo=None)
@@ -1030,9 +1030,9 @@ async def test_read_latest_by_user_id_and_event_id_and_start_or_none_async(
         for log in created_logs
         if log["user_id"] == test_user_id
         and log["event_id"] == test_event_id
-        and log["data"]["start"] == test_start  # type: ignore[index]
+        and log["data"]["start"] == test_start
     ]
-    latest_created_log = max(test_logs, key=lambda x: x["data"]["acted_at"])  # type: ignore[index]
+    latest_created_log = max(test_logs, key=lambda x: x["data"]["acted_at"])
     latest_log = await event_attendance_action_log_repository.read_latest_by_user_id_and_event_id_and_start_or_none_async(
         user_id=test_user_id,
         event_id=test_event_id,
@@ -1043,7 +1043,7 @@ async def test_read_latest_by_user_id_and_event_id_and_start_or_none_async(
     assert latest_log.id == latest_created_log["id"]
     assert latest_log.user_id == latest_created_log["user_id"]
     assert latest_log.event_id == latest_created_log["event_id"]
-    latest_created_log_data: dict[str, Any] = latest_created_log["data"]  # type: ignore[assignment]
+    latest_created_log_data: dict[str, Any] = latest_created_log["data"]
     assert latest_log.start == latest_created_log_data["start"].replace(tzinfo=None)
     assert latest_log.action == latest_created_log_data["action"]
     assert latest_log.acted_at == latest_created_log_data["acted_at"].replace(
@@ -1143,7 +1143,7 @@ async def test_read_all_earliest_attend_async(
         for event_index in user_dict.keys()
     }
 
-    event_attendance_action_logs = []
+    event_attendance_action_logs = set()
     expected_earliest_attends = (
         {}
     )  # 各ユーザー・イベントの組み合わせでの最も早い attend 時刻
@@ -1158,8 +1158,8 @@ async def test_read_all_earliest_attend_async(
             ]
             if attend_logs:
                 expected_earliest_attends[(user_id, event_id)] = min(attend_logs)
-            event_attendance_action_logs.extend(
-                [
+            event_attendance_action_logs.update(
+                {
                     EventAttendanceActionLogEntity(
                         entity_id=generate_uuid(),
                         user_id=user_id,
@@ -1169,7 +1169,7 @@ async def test_read_all_earliest_attend_async(
                         acted_at=log["acted_at"],
                     )
                     for log in logs
-                ]
+                }
             )
 
     await event_attendance_action_log_repository.bulk_create_event_attendance_action_logs_async(
@@ -1272,7 +1272,7 @@ async def test_read_all_latest_leave_async(
         for event_index in user_dict.keys()
     }
 
-    event_attendance_action_logs = []
+    event_attendance_action_logs = set()
     expected_latest_leaves = (
         {}
     )  # 各ユーザー・イベントの組み合わせでの最も遅い leave 時刻
@@ -1287,8 +1287,8 @@ async def test_read_all_latest_leave_async(
             ]
             if leave_logs:
                 expected_latest_leaves[(user_id, event_id)] = max(leave_logs)
-            event_attendance_action_logs.extend(
-                [
+            event_attendance_action_logs.update(
+                {
                     EventAttendanceActionLogEntity(
                         entity_id=generate_uuid(),
                         user_id=user_id,
@@ -1298,7 +1298,7 @@ async def test_read_all_latest_leave_async(
                         acted_at=log["acted_at"],
                     )
                     for log in logs
-                ]
+                }
             )
 
     await event_attendance_action_log_repository.bulk_create_event_attendance_action_logs_async(
@@ -1418,7 +1418,7 @@ async def test_delete_by_user_id_and_event_id_and_start_async(
 @pytest.mark.parametrize(
     "event_attendance_forecasts",
     [
-        [
+        {
             EventAttendanceForecastEntity(
                 entity_id=generate_uuid(),
                 user_id=0,
@@ -1439,12 +1439,12 @@ async def test_delete_by_user_id_and_event_id_and_start_async(
                 ),
                 forecasted_duration=7200,
             ),
-        ],
+        },
     ],
 )
 async def test_bulk_delete_insert_event_attendance_forecasts_async(
     test_session: AsyncSession,
-    event_attendance_forecasts: list[EventAttendanceForecastEntity],
+    event_attendance_forecasts: set[EventAttendanceForecastEntity],
 ) -> None:
     uow = SqlalchemyUnitOfWork(session=test_session)
     event_attendance_forecast_repository = EventAttendanceForecastRepository(uow)
@@ -1463,7 +1463,7 @@ async def test_bulk_delete_insert_event_attendance_forecasts_async(
         assert created.forecasted_attended_at == expected.forecasted_attended_at
         assert created.forecasted_duration == expected.forecasted_duration
 
-    new_forecasts = [
+    new_forecasts = {
         EventAttendanceForecastEntity(
             entity_id=generate_uuid(),
             user_id=2,
@@ -1474,7 +1474,7 @@ async def test_bulk_delete_insert_event_attendance_forecasts_async(
             ),
             forecasted_duration=5400,
         )
-    ]
+    }
 
     updated_forecasts = await event_attendance_forecast_repository.bulk_delete_insert_event_attendance_forecasts_async(
         new_forecasts
@@ -1524,19 +1524,21 @@ async def test_read_all_by_event_ids_async(
     uow = SqlalchemyUnitOfWork(session=test_session)
     event_attendance_forecast_repository = EventAttendanceForecastRepository(uow)
 
-    forecasts = []
+    forecasts = set()
     event_ids = set()
     for forecast_data in event_forecasts:
-        entity_id = generate_uuid()
-        forecast = EventAttendanceForecastEntity(
-            entity_id=entity_id,
-            user_id=forecast_data["user_id"],
-            event_id=forecast_data["event_id"],
-            start=forecast_data["start"],
-            forecasted_attended_at=forecast_data["forecasted_attended_at"],
-            forecasted_duration=forecast_data["forecasted_duration"],
+        forecasts.update(
+            {
+                EventAttendanceForecastEntity(
+                    entity_id=generate_uuid(),
+                    user_id=forecast_data["user_id"],
+                    event_id=forecast_data["event_id"],
+                    start=forecast_data["start"],
+                    forecasted_attended_at=forecast_data["forecasted_attended_at"],
+                    forecasted_duration=forecast_data["forecasted_duration"],
+                )
+            }
         )
-        forecasts.append(forecast)
         event_ids.add(forecast_data["event_id"])
 
     created_forecasts = await event_attendance_forecast_repository.bulk_delete_insert_event_attendance_forecasts_async(

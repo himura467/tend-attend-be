@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, Iterable, Optional, Tuple, TypeVar, Union
+from typing import Any, Iterable, Optional, Tuple, Union
 
 from sqlalchemy.orm.mapper import Mapper
 from sqlalchemy.orm.session import ORMExecuteState
@@ -14,25 +14,23 @@ from tests.db_settings import (
     TEST_SHARD_DB_CONNECTION_KEYS,
 )
 
-_T = TypeVar("_T", bound=Any)
 
-
-def shard_chooser(
-    mapper: Optional[Mapper[_T]], instance: Any, clause: Optional[ClauseElement] = None
+def shard_chooser[T](
+    mapper: Optional[Mapper[T]], instance: Any, clause: Optional[ClauseElement] = None
 ) -> Any:
-    shard_ids: tuple[str, ...] = mapper.local_table.info.get("shard_ids") if mapper else ()  # type: ignore[attr-defined]
-    if shard_ids == (TEST_COMMON_DB_CONNECTION_KEY,):
+    shard_ids: set[str] = mapper.local_table.info.get("shard_ids") if mapper else set()  # type: ignore[attr-defined]
+    if shard_ids == {TEST_COMMON_DB_CONNECTION_KEY}:
         return TEST_COMMON_DB_CONNECTION_KEY
-    if shard_ids == TEST_SHARD_DB_CONNECTION_KEYS:
+    if shard_ids == set(TEST_SHARD_DB_CONNECTION_KEYS):
         shard_id = test_db_shard_resolver.resolve_shard_id(int(instance.user_id))
         return TEST_SHARD_DB_CONNECTION_KEYS[shard_id]
-    if shard_ids == (TEST_SEQUENCE_DB_CONNECTION_KEY,):
+    if shard_ids == {TEST_SEQUENCE_DB_CONNECTION_KEY}:
         return TEST_SEQUENCE_DB_CONNECTION_KEY
     raise NotImplementedError()
 
 
-def identity_chooser(
-    mapper: Mapper[_T],
+def identity_chooser[T](
+    mapper: Mapper[T],
     primary_key: Union[Any, Tuple[Any, ...]],
     *,
     lazy_loaded_from: Optional[InstanceState[Any]],

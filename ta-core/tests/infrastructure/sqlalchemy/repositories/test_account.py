@@ -67,9 +67,9 @@ async def test_create_user_account_async(
     assert user_account.gender == gender
     assert user_account.email == email
     assert user_account.email_verified is False
-    assert user_account.followee_ids == []
+    assert user_account.followee_ids == set()
     assert user_account.followees == []
-    assert user_account.follower_ids == []
+    assert user_account.follower_ids == set()
     assert user_account.followers == []
 
     user_id_duplicated_entity_id = generate_uuid()
@@ -199,9 +199,9 @@ async def test_read_by_username_or_none_async(
     assert user_account.gender == test_account_data["gender"]
     assert user_account.email == test_account_data["email"]
     assert user_account.email_verified is False
-    assert user_account.followee_ids == []
+    assert user_account.followee_ids == set()
     assert user_account.followees == []
-    assert user_account.follower_ids == []
+    assert user_account.follower_ids == set()
     assert user_account.followers == []
 
     non_existent_user_account = (
@@ -290,9 +290,9 @@ async def test_read_by_usernames_async(
                 assert user_account.gender == account_data["gender"]
                 assert user_account.email == account_data["email"]
                 assert user_account.email_verified is False
-                assert user_account.followee_ids == []
+                assert user_account.followee_ids == set()
                 assert user_account.followees == []
-                assert user_account.follower_ids == []
+                assert user_account.follower_ids == set()
                 assert user_account.followers == []
                 break
         assert matched, f"User account {user_account.username} not found in test data"
@@ -308,7 +308,7 @@ async def test_read_by_usernames_async(
         usernames={first_username}
     )
     assert len(user_accounts_less) == 1
-    assert user_accounts_less[0].username == first_username
+    assert next(iter(user_accounts_less)).username == first_username
 
 
 @pytest.mark.asyncio
@@ -375,9 +375,9 @@ async def test_read_by_email_or_none_async(
     assert user_account.gender == test_account_data["gender"]
     assert user_account.email == test_account_data["email"]
     assert user_account.email_verified is False
-    assert user_account.followee_ids == []
+    assert user_account.followee_ids == set()
     assert user_account.followees == []
-    assert user_account.follower_ids == []
+    assert user_account.follower_ids == set()
     assert user_account.followers == []
 
     non_existent_user_account = (
@@ -470,9 +470,9 @@ async def test_read_with_followees_by_id_or_none_async(
     assert follower.gender == accounts_by_user[1]["gender"]
     assert follower.email == accounts_by_user[1]["email"]
     assert follower.email_verified is False
-    assert follower.followee_ids == []
+    assert follower.followee_ids == set()
     assert follower.followees == []
-    assert follower.follower_ids == []
+    assert follower.follower_ids == set()
     assert follower.followers == []
 
     follower_user_account = (
@@ -495,9 +495,9 @@ async def test_read_with_followees_by_id_or_none_async(
     assert followee.gender == accounts_by_user[0]["gender"]
     assert followee.email == accounts_by_user[0]["email"]
     assert followee.email_verified is False
-    assert followee.followee_ids == []
+    assert followee.followee_ids == set()
     assert followee.followees == []
-    assert followee.follower_ids == []
+    assert followee.follower_ids == set()
     assert followee.followers == []
 
 
@@ -582,9 +582,9 @@ async def test_read_with_followers_by_id_or_none_async(
     assert follower.gender == accounts_by_user[1]["gender"]
     assert follower.email == accounts_by_user[1]["email"]
     assert follower.email_verified is False
-    assert follower.followee_ids == []
+    assert follower.followee_ids == set()
     assert follower.followees == []
-    assert follower.follower_ids == []
+    assert follower.follower_ids == set()
     assert follower.followers == []
 
     follower_user_account = (
@@ -607,7 +607,7 @@ async def test_read_with_followers_by_id_or_none_async(
     assert followee.gender == accounts_by_user[0]["gender"]
     assert followee.email == accounts_by_user[0]["email"]
     assert followee.email_verified is False
-    assert followee.followee_ids == []
+    assert followee.followee_ids == set()
     assert followee.followees == []
-    assert followee.follower_ids == []
+    assert followee.follower_ids == set()
     assert followee.followers == []

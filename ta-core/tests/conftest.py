@@ -87,7 +87,7 @@ async def _truncate_all_tables(async_engines: dict[str, AsyncEngine]) -> None:
 
 @pytest_asyncio.fixture()
 async def test_session(
-    async_engines: dict[str, AsyncEngine]
+    async_engines: dict[str, AsyncEngine],
 ) -> AsyncGenerator[AsyncSession, None]:
     async_session = async_sessionmaker(
         shards={
