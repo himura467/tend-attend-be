@@ -7,6 +7,8 @@ on:
 
 jobs:
   release-pr:
+    permissions:
+      pull-requests: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
