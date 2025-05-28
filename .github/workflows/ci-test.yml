@@ -20,7 +20,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version-file: ".python-version"
+          python-version-file: "ta-api/.python-version"
       - name: Install dependencies
         run: |
           curl -sSL https://install.python-poetry.org | python -
