@@ -31,11 +31,11 @@ jobs:
       - name: Initialize MySQL databases
         run: |
           # Execute initialization scripts
-          mysql -h 127.0.0.1 -P 13306 -u root -p root_password < docker/docker-entrypoint-initdb.d/create-sequence-database.sql
-          mysql -h 127.0.0.1 -P 13306 -u root -p root_password < docker/docker-entrypoint-initdb.d/create-shard-databases.sql
-          mysql -h 127.0.0.1 -P 13306 -u root -p root_password < docker/docker-entrypoint-initdb.d/create-test-common-db.sql
-          mysql -h 127.0.0.1 -P 13306 -u root -p root_password < docker/docker-entrypoint-initdb.d/create-test-sequence-db.sql
-          mysql -h 127.0.0.1 -P 13306 -u root -p root_password < docker/docker-entrypoint-initdb.d/create-test-shard-dbs.sql
+          mysql -h 127.0.0.1 -P 13306 -u root -proot_password < docker/docker-entrypoint-initdb.d/create-sequence-database.sql
+          mysql -h 127.0.0.1 -P 13306 -u root -proot_password < docker/docker-entrypoint-initdb.d/create-shard-databases.sql
+          mysql -h 127.0.0.1 -P 13306 -u root -proot_password < docker/docker-entrypoint-initdb.d/create-test-common-db.sql
+          mysql -h 127.0.0.1 -P 13306 -u root -proot_password < docker/docker-entrypoint-initdb.d/create-test-sequence-db.sql
+          mysql -h 127.0.0.1 -P 13306 -u root -proot_password < docker/docker-entrypoint-initdb.d/create-test-shard-dbs.sql
       - name: Setup Python for ta-api
         uses: actions/setup-python@v5
         with:
