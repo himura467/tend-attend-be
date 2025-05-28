@@ -13,7 +13,7 @@ dependencies = [
     "gunicorn (>=23.0.0,<24.0.0)",
     "python-multipart (>=0.0.20,<0.0.21)",
     "mangum (>=0.19.0,<0.20.0)",
-    "ta-core @ file:///Users/himura/Desktop/tend-attend/tend-attend-be/ta-core"
+    "ta-core @ ../ta-core"
 ]
 
 [tool.poetry]
