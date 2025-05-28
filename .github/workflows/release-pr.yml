@@ -26,4 +26,5 @@ jobs:
             gh pr edit $existing_pr --title "Release ${{ steps.timestamp.outputs.now }}"
           else
             echo 'Creating new Release PR...'
-            gh pr create --title "Release ${{ steps.timestamp.outputs.now }}"
+            gh pr create --title "Release ${{ steps.timestamp.outputs.now }}" --head develop --base main
+          fi
