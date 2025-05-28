@@ -1,0 +1,56 @@
+name: ci-test
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: root_password
+          MYSQL_DATABASE: tend_attend_common
+          MYSQL_USER: user
+          MYSQL_PASSWORD: password
+        ports:
+          - 13306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Initialize MySQL databases
+        run: |
+          # Execute initialization scripts
+          mysql -h 127.0.0.1 -P 13306 -u root -proot_password < docker/docker-entrypoint-initdb.d/create-sequence-database.sql
+          mysql -h 127.0.0.1 -P 13306 -u root -proot_password < docker/docker-entrypoint-initdb.d/create-shard-databases.sql
+          mysql -h 127.0.0.1 -P 13306 -u root -proot_password < docker/docker-entrypoint-initdb.d/create-test-common-db.sql
+          mysql -h 127.0.0.1 -P 13306 -u root -proot_password < docker/docker-entrypoint-initdb.d/create-test-sequence-db.sql
+          mysql -h 127.0.0.1 -P 13306 -u root -proot_password < docker/docker-entrypoint-initdb.d/create-test-shard-dbs.sql
+      - name: Setup Python for ta-api
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: "ta-api/.python-version"
+      - name: Setup Python for ta-ml
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: "ta-ml/.python-version"
+      - name: Install dependencies
+        run: |
+          curl -sSL https://install.python-poetry.org | python -
+          ./scripts/poetry-all.sh install
+      - name: Run Lint
+        run: |
+          ./scripts/poe-all.sh lint
+          ./scripts/poe-all.sh format
+      - name: Run Tests
+        run: DB_SHARD_COUNT=2 ./scripts/poe-all.sh test

@@ -9,7 +9,7 @@ readme = "README.md"
 requires-python = ">=3.13,<4.0.0"
 dependencies = [
     "typer[all] (>=0.15.4,<0.16.0)",
-    "ta-core @ file:///Users/himura/Desktop/tend-attend/tend-attend-be/ta-core"
+    "ta-core @ ../ta-core"
 ]
 
 [tool.poetry]
@@ -24,6 +24,7 @@ flake8 = "^7.2.0"
 black = "^25.1.0"
 isort = "^6.0.1"
 poethepoet = "^0.34.0"
+pytest = "^8.3.5"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
@@ -43,3 +44,4 @@ black = "black src tests"
 isort = "isort src tests"
 lint = ["mypy", "flake8"]
 format = ["black", "isort"]
+test = "pytest tests"
