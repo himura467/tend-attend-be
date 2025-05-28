@@ -67,3 +67,8 @@ variable "shard_dbname_prefix" {
   description = "Shard DB name prefix"
   type        = string
 }
+
+variable "ml_server_url" {
+  description = "URL of the ML server"
+  type        = string
+}

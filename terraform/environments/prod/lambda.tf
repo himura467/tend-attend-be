@@ -14,4 +14,5 @@ module "lambda" {
   common_dbname            = "tend_attend_common"
   sequence_dbname          = "tend_attend_sequence"
   shard_dbname_prefix      = "tend_attend_shard"
+  ml_server_url            = module.cloud_run.ml_server_url
 }
