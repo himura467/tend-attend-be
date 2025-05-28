@@ -31,11 +31,11 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Set up Python for ta-api
+      - name: Setup Python for ta-api
         uses: actions/setup-python@v5
         with:
           python-version-file: "ta-api/.python-version"
-      - name: Set up Python for ta-ml
+      - name: Setup Python for ta-ml
         uses: actions/setup-python@v5
         with:
           python-version-file: "ta-ml/.python-version"
