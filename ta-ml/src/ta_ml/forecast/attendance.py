@@ -138,7 +138,7 @@ def forecast_attendance_time(
             "start": event.start,
             "end": event.end,
             "duration": event.end - event.start,
-            "freq": event.recurrence.rrule.freq,
+            "freq": event.recurrence["rrule"]["freq"],
         }
         for event in event_data
     }

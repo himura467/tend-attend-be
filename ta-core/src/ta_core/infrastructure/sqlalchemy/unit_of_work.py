@@ -4,7 +4,7 @@ from sqlalchemy.engine.result import Result
 from sqlalchemy.ext.asyncio.session import AsyncSession, AsyncSessionTransaction
 from sqlalchemy.sql.base import Executable
 
-from ta_core.use_case.unit_of_work_base import IUnitOfWork
+from ta_core.domain.unit_of_work.base import IUnitOfWork
 
 
 class SqlalchemyUnitOfWork(IUnitOfWork):

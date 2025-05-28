@@ -1,17 +1,18 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="ta-api" type="Python.FastAPI">
-    <option name="additionalOptions" value="--reload --port 8000" />
-    <option name="file" value="$PROJECT_DIR$/src/main.py" />
-    <module name="ta-api" />
+  <configuration default="false" name="ta-ml" type="Python.FastAPI">
+    <option name="additionalOptions" value="--reload --port 8001" />
+    <option name="file" value="$PROJECT_DIR$/../ta-ml/src/main.py" />
+    <module name="ta-ml" />
     <option name="ENV_FILES" value="" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
     <envs>
       <env name="DEBUG" value="true" />
     </envs>
-    <option name="SDK_HOME" value="" />
+    <option name="SDK_HOME" value="$PROJECT_DIR$/../ta-ml/.venv/bin/python" />
+    <option name="SDK_NAME" value="Poetry (ta-ml)" />
     <option name="WORKING_DIRECTORY" value="" />
-    <option name="IS_MODULE_SDK" value="true" />
+    <option name="IS_MODULE_SDK" value="false" />
     <option name="ADD_CONTENT_ROOTS" value="true" />
     <option name="ADD_SOURCE_ROOTS" value="true" />
     <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />

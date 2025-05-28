@@ -2,6 +2,9 @@ from collections import defaultdict
 from datetime import date, datetime
 from zoneinfo import ZoneInfo
 
+import httpx
+
+from ta_core.constants.constants import ML_SERVER_URL
 from ta_core.domain.entities.event import Event as EventEntity
 from ta_core.domain.entities.event import (
     EventAttendanceActionLog as EventAttendanceActionLogEntity,
@@ -30,6 +33,16 @@ from ta_core.dtos.event import (
     GetGuestAttendanceStatusResponse,
     GetMyEventsResponse,
     UpdateAttendancesResponse,
+)
+from ta_core.dtos.ml_dto.account import UserAccount as UserAccountMLDto
+from ta_core.dtos.ml_dto.event import Event as EventMLDto
+from ta_core.dtos.ml_dto.event import (
+    EventAttendanceActionLog as EventAttendanceActionLogMLDto,
+)
+from ta_core.dtos.ml_dto.event import Recurrence as RecurrenceMLDto
+from ta_core.dtos.ml_dto.event import RecurrenceRule as RecurrenceRuleMLDto
+from ta_core.dtos.ml_dto.forecast import (
+    ForecastAttendanceTimeRequest,
 )
 from ta_core.error.error_code import ErrorCode
 from ta_core.features.event import (
@@ -487,29 +500,107 @@ class EventUsecase(IUsecase):
     async def forecast_attendance_time_async(
         self,
     ) -> ForecastAttendanceTimeResponse:
-        # event_attendance_action_log_repository = EventAttendanceActionLogRepository(
-        #     self.uow
-        # )
-        # event_repository = EventRepository(self.uow)
-        # user_account_repository = UserAccountRepository(self.uow)
+        event_attendance_action_log_repository = EventAttendanceActionLogRepository(
+            self.uow
+        )
+        event_repository = EventRepository(self.uow)
+        user_account_repository = UserAccountRepository(self.uow)
         event_attendance_forecast_repository = EventAttendanceForecastRepository(
             self.uow
         )
 
-        # earliest_attend_data = (
-        #     await event_attendance_action_log_repository.read_all_earliest_attend_async()
-        # )
-        # latest_leave_data = (
-        #     await event_attendance_action_log_repository.read_all_latest_leave_async()
-        # )
-        # event_data = await event_repository.read_all_with_recurrence_async(where=[])
-        # user_data = await user_account_repository.read_all_async(where=[])
-
-        # 予測を無効化し、空の辞書を返す
-        forecast_result = ForecastAttendanceTimeResponse(
-            attendance_time_forecasts={},
-            error_codes=[],
+        earliest_attend_data = (
+            await event_attendance_action_log_repository.read_all_earliest_attend_async()
         )
+        latest_leave_data = (
+            await event_attendance_action_log_repository.read_all_latest_leave_async()
+        )
+        event_data = await event_repository.read_all_with_recurrence_async(where=[])
+        user_data = await user_account_repository.read_all_async(where=[])
+
+        try:
+            earliest_attend_dtos = [
+                EventAttendanceActionLogMLDto(
+                    id=uuid_to_str(log.id),
+                    user_id=log.user_id,
+                    event_id=uuid_to_str(log.event_id),
+                    start=log.start,
+                    action=log.action,
+                    acted_at=log.acted_at,
+                )
+                for log in earliest_attend_data
+            ]
+            latest_leave_dtos = [
+                EventAttendanceActionLogMLDto(
+                    id=uuid_to_str(log.id),
+                    user_id=log.user_id,
+                    event_id=uuid_to_str(log.event_id),
+                    start=log.start,
+                    action=log.action,
+                    acted_at=log.acted_at,
+                )
+                for log in latest_leave_data
+            ]
+            event_dtos = [
+                EventMLDto(
+                    id=uuid_to_str(event.id),
+                    user_id=event.user_id,
+                    start=event.start,
+                    end=event.end,
+                    timezone=event.timezone,
+                    recurrence=RecurrenceMLDto(
+                        id=uuid_to_str(event.recurrence.id),
+                        rrule=RecurrenceRuleMLDto(
+                            id=uuid_to_str(event.recurrence.rrule.id),
+                            freq=event.recurrence.rrule.freq,
+                        ),
+                    ),
+                )
+                for event in event_data
+            ]
+            user_dtos = [
+                UserAccountMLDto(
+                    id=uuid_to_str(user.id),
+                    user_id=user.user_id,
+                    birth_date=user.birth_date,
+                    gender=user.gender,
+                )
+                for user in user_data
+            ]
+            request = ForecastAttendanceTimeRequest(
+                earliest_attend_data=earliest_attend_dtos,
+                latest_leave_data=latest_leave_dtos,
+                event_data=event_dtos,
+                user_data=user_dtos,
+            )
+            async with httpx.AsyncClient() as client:
+                response = await client.post(
+                    f"{ML_SERVER_URL}/forecast/attendance",
+                    json=request.model_dump(),
+                    timeout=600,  # Set reasonable timeout
+                )
+                response.raise_for_status()  # Raise exception for 4xx/5xx status codes
+                forecast_result = ForecastAttendanceTimeResponse.model_validate(
+                    response.json()
+                )
+        except (httpx.TimeoutException, httpx.NetworkError):
+            # Handle network timeouts and connection errors
+            return ForecastAttendanceTimeResponse(
+                attendance_time_forecasts={},
+                error_codes=[ErrorCode.ML_SERVER_TIMEOUT],
+            )
+        except httpx.HTTPStatusError:
+            # Handle HTTP errors (4xx, 5xx responses)
+            return ForecastAttendanceTimeResponse(
+                attendance_time_forecasts={},
+                error_codes=[ErrorCode.ML_SERVER_ERROR],
+            )
+        except ValueError:
+            # Handle validation errors from model_validate
+            return ForecastAttendanceTimeResponse(
+                attendance_time_forecasts={},
+                error_codes=[ErrorCode.ML_SERVER_ERROR],
+            )
 
         forecasts = {
             EventAttendanceForecastEntity(

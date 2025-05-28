@@ -24,13 +24,18 @@ async def forecast_attendance_time(
 ) -> ForecastAttendanceTimeResponse:
     return forecast(
         earliest_attend_data={
-            EventAttendanceActionLogEntity(**log.model_dump())
+            EventAttendanceActionLogEntity(**log.model_dump(by_alias=True))
             for log in req.earliest_attend_data
         },
         latest_leave_data={
-            EventAttendanceActionLogEntity(**log.model_dump())
+            EventAttendanceActionLogEntity(**log.model_dump(by_alias=True))
             for log in req.latest_leave_data
         },
-        event_data={EventEntity(**event.model_dump()) for event in req.event_data},
-        user_data={UserAccountEntity(**user.model_dump()) for user in req.user_data},
+        event_data={
+            EventEntity(**event.model_dump(by_alias=True)) for event in req.event_data
+        },
+        user_data={
+            UserAccountEntity(**user.model_dump(by_alias=True))
+            for user in req.user_data
+        },
     )

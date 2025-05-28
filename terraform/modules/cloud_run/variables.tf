@@ -13,6 +13,11 @@ variable "cloud_run_image_url" {
   type        = string
 }
 
+variable "cloud_run_container_port" {
+  description = "Port on which the Cloud Run container listens"
+  type        = number
+}
+
 variable "cloud_run_min_instance_count" {
   description = "Minimum number of instances for Cloud Run service"
   type        = number

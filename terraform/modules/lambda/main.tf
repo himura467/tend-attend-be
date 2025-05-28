@@ -94,6 +94,7 @@ resource "aws_lambda_function" "this" {
       AURORA_COMMON_DBNAME            = var.common_dbname
       AURORA_SEQUENCE_DBNAME          = var.sequence_dbname
       AURORA_SHARD_DBNAME_PREFIX      = var.shard_dbname_prefix
+      ML_SERVER_URL                   = var.ml_server_url
     }
   }
 }

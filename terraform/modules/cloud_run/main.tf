@@ -11,13 +11,26 @@ resource "google_cloud_run_v2_service" "ml_server" {
     containers {
       image = var.cloud_run_image_url
       ports {
-        container_port = 8000
+        container_port = var.cloud_run_container_port
+      }
+      startup_probe {
+        initial_delay_seconds = 5
+        tcp_socket {
+          port = var.cloud_run_container_port
+        }
+      }
+      resources {
+        limits = {
+          cpu    = "1"
+          memory = "1024Mi"
+        }
       }
     }
     scaling {
       min_instance_count = var.cloud_run_min_instance_count
       max_instance_count = var.cloud_run_max_instance_count
     }
+    timeout = "600s"
   }
   depends_on = [google_project_service.cloud_run_admin_api]
 }

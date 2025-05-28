@@ -18,7 +18,8 @@ dependencies = [
     "python-dotenv (>=1.1.0,<2.0.0)",
     "mysql-connector-python (>=9.3.0,<10.0.0)",
     "aws-advanced-python-wrapper (>=1.2.0,<2.0.0)",
-    "uuid6 (>=2024.7.10,<2025.0.0)"
+    "uuid6 (>=2024.7.10,<2025.0.0)",
+    "httpx (>=0.28.1,<0.29.0)"
 ]
 
 [tool.poetry]
