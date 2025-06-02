@@ -1,3 +1,7 @@
+# Tend Attend (Backend)
+
+Tend Attend is an intuitive event management tool. It stands out by offering features that predict attendee status, enabling event organizers to leverage this information for effective management.
+
 ## Local Setup
 
 We will be using `pyenv`, `poetry` and `docker`.
@@ -7,6 +11,10 @@ We will be using `pyenv`, `poetry` and `docker`.
 https://github.com/pyenv/pyenv
 
 ```sh
+cd ta-api
+pyenv install `cat .python-version`
+cd ..
+cd ta-ml
 pyenv install `cat .python-version`
 ```
 
@@ -15,7 +23,6 @@ pyenv install `cat .python-version`
 https://python-poetry.org
 
 ```sh
-poetry config virtualenvs.in-project true
 ./scripts/poetry-all.sh install
 ```
 
@@ -29,9 +36,12 @@ docker compose up
 
 ### Run an ASGI web server using uvicorn
 
-Please make sure that the appropriate `.env` files are in place before running.
-
 ```sh
 cd ta-api
-poetry run uvicorn main:app --reload
+poetry run uvicorn main:app --reload --port=8000
+```
+
+```sh
+cd ta-ml
+poetry run uvicorn main:app --reload --port=8001
 ```
