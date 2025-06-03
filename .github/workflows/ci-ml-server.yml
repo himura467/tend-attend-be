@@ -9,6 +9,9 @@ on:
       - opened
       - synchronize
       - reopened
+    paths:
+      - .github/workflows/ci-ml-server.yml
+      - ta-ml/**
 
 jobs:
   test:

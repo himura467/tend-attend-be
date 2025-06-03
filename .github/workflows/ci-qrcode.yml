@@ -9,6 +9,9 @@ on:
       - opened
       - synchronize
       - reopened
+    paths:
+      - .github/workflows/ci-qrcode.yml
+      - ta-qrcode/**
 
 defaults:
   run:
