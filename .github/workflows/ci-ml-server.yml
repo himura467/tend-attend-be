@@ -24,7 +24,8 @@ jobs:
       - name: Install dependencies
         run: |
           curl -sSL https://install.python-poetry.org | python -
-          ./scripts/poetry-all.sh install
+          cd ta-ml
+          poetry install
       - name: Run Lint
         run: |
           cd ta-ml
