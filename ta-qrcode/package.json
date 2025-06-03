@@ -10,11 +10,11 @@
   "author": "",
   "license": "ISC",
   "packageManager": "pnpm@10.11.0",
-  "devDependencies": {
-    "typescript": "^5.8.3"
-  },
   "dependencies": {
     "@napi-rs/canvas": "^0.1.70",
     "qr-code-styling": "^1.9.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
   }
 }
