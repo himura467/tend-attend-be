@@ -61,4 +61,6 @@ jobs:
           poetry run poe lint
           poetry run poe format
       - name: Run Tests
-        run: DB_SHARD_COUNT=2 poetry run poe test
+        run: |
+          cd ta-core
+          DB_SHARD_COUNT=2 poetry run poe test
