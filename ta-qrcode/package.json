@@ -16,6 +16,7 @@
     "qr-code-styling": "^1.9.2"
   },
   "devDependencies": {
+    "@types/jsdom": "^21.1.7",
     "@types/node": "^22.15.29",
     "typescript": "^5.8.3"
   }
