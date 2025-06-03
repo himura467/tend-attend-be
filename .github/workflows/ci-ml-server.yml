@@ -1,0 +1,32 @@
+name: ci-ml-server
+
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Python for ta-ml
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: "ta-ml/.python-version"
+      - name: Install dependencies
+        run: |
+          curl -sSL https://install.python-poetry.org | python -
+          ./scripts/poetry-all.sh install
+      - name: Run Lint
+        run: |
+          cd ta-ml
+          poetry run poe lint
+          poetry run poe format
