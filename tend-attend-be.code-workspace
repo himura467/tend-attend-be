@@ -4,12 +4,16 @@
       "path": "."
     },
     {
+      "path": "ta-qrcode"
+    },
+    {
       "path": "terraform"
     }
   ],
   "extensions": {
     "recommendations": [
-      "hashicorp.terraform"
+      "hashicorp.terraform",
+      "esbenp.prettier-vscode"
     ]
   }
 }
