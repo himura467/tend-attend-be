@@ -10,12 +10,13 @@ on:
       - synchronize
       - reopened
 
+defaults:
+  run:
+    working-directory: ./ta-qrcode
+
 jobs:
   test:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./ta-qrcode
     timeout-minutes: 10
     steps:
       - name: Checkout
@@ -29,6 +30,7 @@ jobs:
         with:
           node-version-file: "ta-qrcode/.node-version"
           cache: "pnpm"
+          cache-dependency-path: ./ta-qrcode/pnpm-lock.yaml
       - name: Install dependencies
         run: pnpm install
       - name: Run Lint
