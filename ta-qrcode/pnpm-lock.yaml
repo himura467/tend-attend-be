@@ -11,9 +11,12 @@ importers:
       '@napi-rs/canvas':
         specifier: ^0.1.70
         version: 0.1.70
+      canvas:
+        specifier: npm:@napi-rs/canvas@^0.1.70
+        version: '@napi-rs/canvas@0.1.70'
       jsdom:
         specifier: ^26.1.0
-        version: 26.1.0
+        version: 26.1.0(@napi-rs/canvas@0.1.70)
       qr-code-styling:
         specifier: ^1.9.2
         version: 1.9.2
@@ -704,7 +707,7 @@ snapshots:
 
   is-potential-custom-element-name@1.0.1: {}
 
-  jsdom@26.1.0:
+  jsdom@26.1.0(@napi-rs/canvas@0.1.70):
     dependencies:
       cssstyle: 4.3.1
       data-urls: 5.0.0
@@ -726,6 +729,8 @@ snapshots:
       whatwg-url: 14.2.0
       ws: 8.18.2
       xml-name-validator: 5.0.0
+    optionalDependencies:
+      canvas: '@napi-rs/canvas@0.1.70'
     transitivePeerDependencies:
       - bufferutil
       - supports-color
