@@ -1,6 +1,6 @@
 module "lambda" {
   source                   = "../../modules/lambda"
-  lambda_timeout           = 60
+  lambda_timeout           = 900
   lambda_memory_size       = 128
   subnet_ids               = module.vpc.private_subnets[*].id
   security_group_ids       = [module.private_sg.aurora_sg_id]

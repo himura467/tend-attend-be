@@ -29,7 +29,7 @@ class CORSMiddleware(BaseHTTPMiddleware):
             response.headers["Access-Control-Allow-Methods"] = (
                 "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT"
             )
-            response.headers["Access-Control-Allow-Headers"] = "Content-Type, x-api-key"
+            response.headers["Access-Control-Allow-Headers"] = "Accept, Authorization, Content-Type, Origin, Referer, X-Api-Key"
 
         return response
 
