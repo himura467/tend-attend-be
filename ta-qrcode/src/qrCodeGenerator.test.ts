@@ -1,7 +1,7 @@
-import { describe, it, expect } from "vitest";
+// import fs from "fs";
+// import path from "path";
+import { describe, expect, it } from "vitest";
 import { generateQrCode, QRCodeOptions } from "./qrCodeGenerator";
-// import fs from 'fs';
-// import path from 'path';
 
 describe("generateQrCode", () => {
   it("should generate a PNG QR code with default options", async () => {
@@ -21,8 +21,7 @@ describe("generateQrCode", () => {
       width: 200,
       height: 200,
       data: "https://www.facebook.com",
-      image:
-        "https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg",
+      image: "https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg",
       dotsOptions: {
         type: "square",
         color: "#FF0000",
@@ -36,7 +35,7 @@ describe("generateQrCode", () => {
     expect(buffer.length).toBeGreaterThan(1000);
 
     // デバッグ用にファイルを保存する場合
-    // fs.writeFileSync(path.resolve(__dirname, './test-custom.png'), buffer);
+    // fs.writeFileSync(path.resolve(__dirname, "./test-custom.png"), buffer);
   }, 10000);
 
   it("should generate an SVG QR code", async () => {
@@ -52,7 +51,7 @@ describe("generateQrCode", () => {
     expect(buffer.toString()).toContain("<svg"); // SVG であることを確認
 
     // デバッグ用にファイルを保存する場合
-    // fs.writeFileSync(path.resolve(__dirname, './test-svg.svg'), buffer);
+    // fs.writeFileSync(path.resolve(__dirname, "./test-svg.svg"), buffer);
   }, 10000);
 
   it("should handle missing data gracefully", async () => {
