@@ -1,6 +1,6 @@
-import QRCodeStyling, { Options as QRCodeOptions } from "qr-code-styling";
-import { JSDOM } from "jsdom";
 import nodeCanvas from "canvas";
+import { JSDOM } from "jsdom";
+import QRCodeStyling, { Options as QRCodeOptions } from "qr-code-styling";
 
 /**
  * カスタマイズ可能な QR コードを生成する関数
@@ -8,10 +8,7 @@ import nodeCanvas from "canvas";
  * @param outputType 生成する QR コードの出力形式 ('png' または 'svg')
  * @returns 生成された QR コードの Buffer
  */
-export async function generateQrCode(
-  options: QRCodeOptions,
-  outputType: "png" | "svg" = "png",
-): Promise<Buffer> {
+export async function generateQrCode(options: QRCodeOptions, outputType: "png" | "svg" = "png"): Promise<Buffer> {
   const defaultOptions: QRCodeOptions = {
     type: outputType === "svg" ? "svg" : "canvas", // 出力タイプに応じて 'svg' または 'canvas' を設定
     shape: "square",

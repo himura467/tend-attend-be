@@ -6,9 +6,7 @@ import { generateQrCode, QRCodeOptions } from "./qrCodeGenerator";
  * @param event API Gateway からのイベント
  * @returns HTTP レスポンス
  */
-export const handler = async (
-  event: APIGatewayProxyEventV2,
-): Promise<APIGatewayProxyResultV2> => {
+export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
   try {
     // リクエストボディから QR コードのオプションと出力タイプを取得
     const body = event.body ? JSON.parse(event.body) : {};
