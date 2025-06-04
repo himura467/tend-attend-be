@@ -1,14 +1,16 @@
-name: ci-test
+name: ci-server
 
 on:
-  push:
-    branches:
-      - develop
   pull_request:
     types:
       - opened
       - synchronize
       - reopened
+    paths:
+      - .github/workflows/ci-server.yml
+      - ta-api/**
+      - ta-cli/**
+      - ta-core/**
 
 jobs:
   test:
@@ -40,17 +42,27 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version-file: "ta-api/.python-version"
-      - name: Setup Python for ta-ml
-        uses: actions/setup-python@v5
-        with:
-          python-version-file: "ta-ml/.python-version"
       - name: Install dependencies
         run: |
           curl -sSL https://install.python-poetry.org | python -
-          ./scripts/poetry-all.sh install
+          cd ta-api
+          poetry install
+          cd ../ta-cli
+          poetry install
+          cd ../ta-core
+          poetry install
       - name: Run Lint
         run: |
-          ./scripts/poe-all.sh lint
-          ./scripts/poe-all.sh format
+          cd ta-api
+          poetry run poe lint
+          poetry run poe format
+          cd ../ta-cli
+          poetry run poe lint
+          poetry run poe format
+          cd ../ta-core
+          poetry run poe lint
+          poetry run poe format
       - name: Run Tests
-        run: DB_SHARD_COUNT=2 ./scripts/poe-all.sh test
+        run: |
+          cd ta-core
+          DB_SHARD_COUNT=2 poetry run poe test
