@@ -105,7 +105,7 @@ resource "aws_lambda_function_url" "this" {
   cors {
     allow_credentials = true
     allow_headers     = ["Accept", "Authorization", "Content-Type", "Origin", "Referer", "X-Api-Key"]
-    allow_methods     = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+    allow_methods     = ["*"]
     allow_origins     = ["*"]
     expose_headers    = ["Date", "Keep-Alive"]
     max_age           = 86400
