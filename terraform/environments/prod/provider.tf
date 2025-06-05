@@ -17,6 +17,12 @@ provider "aws" {
   region  = var.aws_region
 }
 
+provider "aws" {
+  alias   = "us_east_1"
+  profile = var.aws_profile
+  region  = "us-east-1"
+}
+
 provider "google" {
   project = var.google_project_id
   region  = var.google_region
