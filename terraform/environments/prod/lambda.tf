@@ -4,7 +4,6 @@ module "lambda" {
   lambda_memory_size       = 128
   subnet_ids               = module.vpc.private_subnets[*].id
   security_group_ids       = [module.private_sg.aurora_sg_id]
-  frontend_urls            = "https://${var.domain_name},https://develop.${var.domain_name}"
   cookie_domain            = var.domain_name
   jwt_secret_key           = "38b0ab2ea67a66315f3117518db7943b09ab281e362b9fd4a293704324eb0404"
   aurora_credentials       = module.secrets_manager.aurora_credentials
@@ -15,4 +14,5 @@ module "lambda" {
   sequence_dbname          = "tend_attend_sequence"
   shard_dbname_prefix      = "tend_attend_shard"
   ml_server_url            = module.cloud_run.ml_server_url
+  allow_origins            = ["https://${var.domain_name}", "https://develop.${var.domain_name}"]
 }

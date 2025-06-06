@@ -81,7 +81,6 @@ resource "aws_lambda_function" "this" {
   }
   environment {
     variables = {
-      FRONTEND_URLS                   = var.frontend_urls
       COOKIE_DOMAIN                   = var.cookie_domain
       JWT_SECRET_KEY                  = var.jwt_secret_key
       AWS_SECRETSMANAGER_SECRET_ID    = var.aurora_credentials.secret_id
@@ -106,7 +105,7 @@ resource "aws_lambda_function_url" "this" {
     allow_credentials = true
     allow_headers     = ["accept", "authorization", "content-type", "origin", "referer"]
     allow_methods     = ["*"]
-    allow_origins     = ["*"]
+    allow_origins     = var.allow_origins
     expose_headers    = ["date", "keep-alive"]
     max_age           = 86400
   }
