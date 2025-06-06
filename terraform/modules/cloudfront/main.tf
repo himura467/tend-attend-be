@@ -53,7 +53,7 @@ resource "aws_cloudfront_distribution" "this" {
     target_origin_id       = "lambda"
     viewer_protocol_policy = "https-only"
   }
-  price_class = "PriceClass_100"
+  price_class = "PriceClass_200"
   restrictions {
     geo_restriction {
       restriction_type = "none"
