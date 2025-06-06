@@ -104,10 +104,10 @@ resource "aws_lambda_function_url" "this" {
   authorization_type = "AWS_IAM"
   cors {
     allow_credentials = true
-    allow_headers     = ["Accept", "Authorization", "Content-Type", "Origin", "Referer", "X-Api-Key"]
+    allow_headers     = ["accept", "authorization", "content-type", "origin", "referer"]
     allow_methods     = ["*"]
     allow_origins     = ["*"]
-    expose_headers    = ["Date", "Keep-Alive"]
+    expose_headers    = ["date", "keep-alive"]
     max_age           = 86400
   }
 }
