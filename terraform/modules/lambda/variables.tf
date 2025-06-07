@@ -18,11 +18,6 @@ variable "security_group_ids" {
   type        = list(string)
 }
 
-variable "frontend_urls" {
-  description = "URLs of the frontend"
-  type        = string
-}
-
 variable "cookie_domain" {
   description = "Cookie domain"
   type        = string
@@ -71,4 +66,9 @@ variable "shard_dbname_prefix" {
 variable "ml_server_url" {
   description = "URL of the ML server"
   type        = string
+}
+
+variable "allow_origins" {
+  description = "List of allowed origins for CORS"
+  type        = list(string)
 }

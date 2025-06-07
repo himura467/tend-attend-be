@@ -4,7 +4,6 @@ from fastapi import FastAPI, Request, Response, status
 from mangum import Mangum
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from ta_api.constants import ALLOWED_ORIGINS
 from ta_api.routers import account, admin, auth, event, verify
 
 app = FastAPI()
@@ -14,24 +13,10 @@ class CORSMiddleware(BaseHTTPMiddleware):
     async def dispatch(
         self, request: Request, call_next: Callable[[Request], Awaitable[Response]]
     ) -> Response:
-        response: Response
         if request.method == "OPTIONS":
-            response = Response(status_code=status.HTTP_204_NO_CONTENT)
+            return Response(status_code=status.HTTP_204_NO_CONTENT)
         else:
-            response = await call_next(request)
-
-        origin = request.headers.get("origin")
-        if not origin:
-            return response
-        if origin in ALLOWED_ORIGINS:
-            response.headers["Access-Control-Allow-Origin"] = origin
-            response.headers["Access-Control-Allow-Credentials"] = "true"
-            response.headers["Access-Control-Allow-Methods"] = (
-                "DELETE, GET, HEAD, OPTIONS, PATCH, POST, PUT"
-            )
-            response.headers["Access-Control-Allow-Headers"] = "Content-Type, x-api-key"
-
-        return response
+            return await call_next(request)
 
 
 app.add_middleware(CORSMiddleware)
@@ -65,5 +50,11 @@ app.include_router(
     prefix="/events",
     tags=["events"],
 )
+
+
+@app.get("/healthz")
+async def health_check() -> Response:
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
+
 
 lambda_handler = Mangum(app)

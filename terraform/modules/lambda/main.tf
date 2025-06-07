@@ -81,7 +81,6 @@ resource "aws_lambda_function" "this" {
   }
   environment {
     variables = {
-      FRONTEND_URLS                   = var.frontend_urls
       COOKIE_DOMAIN                   = var.cookie_domain
       JWT_SECRET_KEY                  = var.jwt_secret_key
       AWS_SECRETSMANAGER_SECRET_ID    = var.aurora_credentials.secret_id
@@ -96,5 +95,18 @@ resource "aws_lambda_function" "this" {
       AURORA_SHARD_DBNAME_PREFIX      = var.shard_dbname_prefix
       ML_SERVER_URL                   = var.ml_server_url
     }
+  }
+}
+
+resource "aws_lambda_function_url" "this" {
+  function_name      = aws_lambda_function.this.function_name
+  authorization_type = "AWS_IAM"
+  cors {
+    allow_credentials = true
+    allow_headers     = ["accept", "authorization", "content-type", "origin", "referer"]
+    allow_methods     = ["*"]
+    allow_origins     = var.allow_origins
+    expose_headers    = ["date", "keep-alive"]
+    max_age           = 86400
   }
 }
