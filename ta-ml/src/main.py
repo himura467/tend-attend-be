@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Response, status
 
 from ta_ml.domain.entities.account import UserAccount as UserAccountEntity
 from ta_ml.domain.entities.event import Event as EventEntity
@@ -12,6 +12,11 @@ from ta_ml.dtos.forecast import (
 from ta_ml.forecast.attendance import forecast_attendance_time as forecast
 
 app = FastAPI()
+
+
+@app.get("/healthz")
+async def health_check() -> Response:
+    return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
 @app.post(
