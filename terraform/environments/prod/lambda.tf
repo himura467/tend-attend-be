@@ -14,5 +14,5 @@ module "lambda" {
   sequence_dbname          = "tend_attend_sequence"
   shard_dbname_prefix      = "tend_attend_shard"
   ml_server_url            = module.cloud_run.ml_server_url
-  allow_origins            = ["https://${var.domain_name}", "https://develop.${var.domain_name}"]
+  allow_origins            = ["https://${var.domain_name}"]
 }
