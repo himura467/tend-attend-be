@@ -17,6 +17,7 @@ cd $ROOT_DIR/terraform/environments/$3
 terraform init
 # Force update of Lambda function by targeting the source_code_hash
 # Force update of the Google Artifact Registry repository
-terraform apply \
-  -replace="module.lambda.aws_lambda_function.this" \
-  -replace="google_artifact_registry_repository.tend_attend_ml_repo"
+terraform destroy \
+  -target=module.lambda.aws_lambda_function.this \
+  -target=google_artifact_registry_repository.tend_attend_ml_repo
+terraform apply
