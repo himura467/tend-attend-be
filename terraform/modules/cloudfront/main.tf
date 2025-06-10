@@ -10,7 +10,7 @@ resource "aws_cloudfront_cache_policy" "lambda" {
     headers_config {
       header_behavior = "whitelist"
       headers {
-        items = ["accept", "authorization", "content-type", "origin", "referer"]
+        items = ["content-type"]
       }
     }
     query_strings_config {
