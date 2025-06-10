@@ -23,7 +23,7 @@ pyenv install `cat .python-version`
 https://python-poetry.org
 
 ```sh
-./scripts/poetry-all.sh install
+./scripts/poetry_all.sh install
 ```
 
 ### Build and run the application using Docker Compose
