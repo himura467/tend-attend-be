@@ -34,9 +34,17 @@ docker build -f ${ROOT_DIR}/docker/ml-server/Dockerfile \
 
 # QR Code Server build
 PNPM_VERSION=$(grep -o '"pnpm@[^"]*"' ${ROOT_DIR}/ta-qrcode/package.json | grep -o '[0-9]*\.[0-9]*\.[0-9]*')
+rm -f qrcode.zip qrcode-dependencies.zip
 docker build -f ${ROOT_DIR}/docker/qrcode-server/Dockerfile \
   --build-arg PNPM_VERSION=${PNPM_VERSION} \
   --platform linux/amd64 \
   --no-cache \
   --provenance=false \
   -t tend-attend-qrcode:latest ${ROOT_DIR} --progress=plain
+QRCODE_CONTAINER_ID=$(docker create --platform linux/amd64 tend-attend-qrcode:latest)
+docker cp "$QRCODE_CONTAINER_ID":/var/task/dist ${ROOT_DIR}
+docker cp "$QRCODE_CONTAINER_ID":/var/task/node_modules ${ROOT_DIR}/qrcode-node_modules
+docker rm -v "$QRCODE_CONTAINER_ID"
+zip -r -X qrcode.zip dist/
+cd qrcode-node_modules && zip -r -X ../qrcode-dependencies.zip . -x ".cache/*" && cd ..
+rm -rf ${ROOT_DIR}/dist ${ROOT_DIR}/qrcode-node_modules
