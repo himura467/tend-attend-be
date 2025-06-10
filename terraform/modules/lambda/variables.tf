@@ -1,13 +1,3 @@
-variable "lambda_timeout" {
-  description = "Timeout for the Lambda function in seconds"
-  type        = number
-}
-
-variable "lambda_memory_size" {
-  description = "Memory size for the Lambda function in MB"
-  type        = number
-}
-
 variable "subnet_ids" {
   description = "List of subnet IDs for the Lambda function"
   type        = list(string)
@@ -16,6 +6,21 @@ variable "subnet_ids" {
 variable "security_group_ids" {
   description = "List of security group IDs for the Lambda function"
   type        = list(string)
+}
+
+variable "allow_origins" {
+  description = "List of allowed origins for CORS"
+  type        = list(string)
+}
+
+variable "server_lambda_timeout" {
+  description = "Timeout for the Server Lambda function in seconds"
+  type        = number
+}
+
+variable "server_lambda_memory_size" {
+  description = "Memory size for the Server Lambda function in MB"
+  type        = number
 }
 
 variable "cookie_domain" {
@@ -66,11 +71,6 @@ variable "shard_dbname_prefix" {
 variable "ml_server_url" {
   description = "URL of the ML server"
   type        = string
-}
-
-variable "allow_origins" {
-  description = "List of allowed origins for CORS"
-  type        = list(string)
 }
 
 variable "qrcode_lambda_timeout" {
