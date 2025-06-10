@@ -14,9 +14,12 @@ class CORSMiddleware(BaseHTTPMiddleware):
         self, request: Request, call_next: Callable[[Request], Awaitable[Response]]
     ) -> Response:
         if request.method == "OPTIONS":
-            return Response(status_code=status.HTTP_204_NO_CONTENT)
-        else:
-            return await call_next(request)
+            response = Response(status_code=status.HTTP_204_NO_CONTENT)
+            response.headers["Access-Control-Allow-Headers"] = (
+                "content-type, x-amz-content-sha256"
+            )
+            return response
+        return await call_next(request)
 
 
 app.add_middleware(CORSMiddleware)
