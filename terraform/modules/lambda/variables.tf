@@ -72,3 +72,13 @@ variable "allow_origins" {
   description = "List of allowed origins for CORS"
   type        = list(string)
 }
+
+variable "qrcode_lambda_timeout" {
+  description = "Timeout for the QRCode Lambda function in seconds"
+  type        = number
+}
+
+variable "qrcode_lambda_memory_size" {
+  description = "Memory size for the QRCode Lambda function in MB"
+  type        = number
+}
