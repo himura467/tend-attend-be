@@ -169,3 +169,5 @@ cython_debug/
 python.zip
 main.zip
 dependencies.zip
+qrcode.zip
+qrcode-dependencies.zip
