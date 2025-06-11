@@ -1,5 +1,5 @@
 import { LambdaFunctionURLEvent, LambdaFunctionURLResult } from "aws-lambda";
-import { generateQrCode, QRCodeOptions } from "./qrCodeGenerator";
+import { generateQRCode, QRCodeOptions } from "./qrCodeGenerator";
 
 /**
  * AWS Lambda ハンドラ関数
@@ -33,7 +33,7 @@ export const handler = async (event: LambdaFunctionURLEvent): Promise<LambdaFunc
     qrCodeOptions.data = data;
 
     // QR コードを生成
-    const qrCodeBuffer = await generateQrCode(qrCodeOptions, outputType);
+    const qrCodeBuffer = await generateQRCode(qrCodeOptions, outputType);
 
     // 生成された QR コードのタイプに応じて Content-Type を設定
     const contentType = outputType === "svg" ? "image/svg+xml" : "image/png";
