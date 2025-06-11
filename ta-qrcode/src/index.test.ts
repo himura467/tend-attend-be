@@ -227,7 +227,7 @@ describe("Lambda handler", () => {
     expect(result.statusCode).toBe(400);
     expect(result.headers?.["Content-Type"]).toBe("application/json");
     expect(JSON.parse(result.body as string)).toEqual({
-      message: "Invalid path: must contain /qrcode/",
+      message: "Invalid path: must start with /qrcode/",
     });
     expect(mockGenerateQRCode).not.toHaveBeenCalled();
   });
@@ -272,7 +272,7 @@ describe("Lambda handler", () => {
     expect(result.statusCode).toBe(400);
     expect(result.headers?.["Content-Type"]).toBe("application/json");
     expect(JSON.parse(result.body as string)).toEqual({
-      message: "Invalid path: must contain /qrcode/",
+      message: "Invalid path: must start with /qrcode/",
     });
     expect(mockGenerateQRCode).not.toHaveBeenCalled();
   });
@@ -317,7 +317,52 @@ describe("Lambda handler", () => {
     expect(result.statusCode).toBe(400);
     expect(result.headers?.["Content-Type"]).toBe("application/json");
     expect(JSON.parse(result.body as string)).toEqual({
-      message: "Invalid path: must contain /qrcode/",
+      message: "Invalid path: must start with /qrcode/",
+    });
+    expect(mockGenerateQRCode).not.toHaveBeenCalled();
+  });
+
+  it("should return 400 error when path has /qrcode/ in the middle", async () => {
+    const event: LambdaFunctionURLEvent = {
+      version: "2.0",
+      routeKey: "$default",
+      rawPath: "/abc/qrcode/test",
+      rawQueryString: "",
+      cookies: [],
+      headers: {
+        host: "example.com",
+      },
+      queryStringParameters: {},
+      requestContext: {
+        accountId: "123456789012",
+        apiId: "api-id",
+        domainName: "example.com",
+        domainPrefix: "api",
+        http: {
+          method: "POST",
+          path: "/abc/qrcode/test",
+          protocol: "HTTP/1.1",
+          sourceIp: "127.0.0.1",
+          userAgent: "Custom User Agent String",
+        },
+        requestId: "id",
+        routeKey: "$default",
+        stage: "$default",
+        time: "12/Mar/2020:19:03:58 +0000",
+        timeEpoch: 1583348638390,
+      },
+      body: undefined,
+      pathParameters: {},
+      isBase64Encoded: false,
+      stageVariables: {},
+    };
+
+    const result = (await handler(event)) as APIGatewayProxyStructuredResultV2;
+
+    expect(result.statusCode).toBe(400);
+    expect(result.headers?.["Content-Type"]).toBe("application/json");
+    expect(JSON.parse(result.body as string)).toEqual({
+      message: "Invalid path: must start with /qrcode/",
     });
     expect(mockGenerateQRCode).not.toHaveBeenCalled();
   });
@@ -471,14 +516,14 @@ describe("Lambda handler", () => {
     consoleErrorSpy.mockRestore();
   });
 
-  it("should construct correct URL when rawPath has complex path after /qrcode", async () => {
+  it("should construct correct URL when rawPath has complex path after /qrcode/", async () => {
     const mockBuffer = Buffer.from("mock-data");
     mockGenerateQRCode.mockResolvedValue(mockBuffer);
 
     const event: LambdaFunctionURLEvent = {
       version: "2.0",
       routeKey: "$default",
-      rawPath: "/api/v1/qrcode/user/123/profile",
+      rawPath: "/qrcode/user/123/profile",
       rawQueryString: "",
       cookies: [],
       headers: {
@@ -492,7 +537,7 @@ describe("Lambda handler", () => {
         domainPrefix: "api",
         http: {
           method: "POST",
-          path: "/api/v1/qrcode/user/123/profile",
+          path: "/qrcode/user/123/profile",
           protocol: "HTTP/1.1",
           sourceIp: "127.0.0.1",
           userAgent: "Custom User Agent String",
