@@ -73,6 +73,11 @@ variable "ml_server_url" {
   type        = string
 }
 
+variable "qrcode_ecr_repository_url" {
+  description = "ECR repository URL for the QRCode Lambda function"
+  type        = string
+}
+
 variable "qrcode_lambda_timeout" {
   description = "Timeout for the QRCode Lambda function in seconds"
   type        = number
