@@ -8,7 +8,7 @@ import QRCodeStyling, { Options as QRCodeOptions } from "qr-code-styling";
  * @param outputType 生成する QR コードの出力形式 ('png' または 'svg')
  * @returns 生成された QR コードの Buffer
  */
-export async function generateQrCode(options: QRCodeOptions, outputType: "png" | "svg" = "png"): Promise<Buffer> {
+export async function generateQRCode(options: QRCodeOptions, outputType: "png" | "svg" = "png"): Promise<Buffer> {
   const defaultOptions: QRCodeOptions = {
     type: outputType === "svg" ? "svg" : "canvas", // 出力タイプに応じて 'svg' または 'canvas' を設定
     shape: "square",
