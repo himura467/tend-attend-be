@@ -10,7 +10,7 @@ resource "aws_s3_object" "server_python_layer" {
 }
 
 resource "aws_lambda_layer_version" "server_python_libs" {
-  layer_name          = "ServerPythonLibs"
+  layer_name          = "server-python-libs"
   compatible_runtimes = ["python3.13"]
   s3_bucket           = aws_s3_bucket.server_python_layer.id
   s3_key              = aws_s3_object.server_python_layer.key
@@ -18,7 +18,7 @@ resource "aws_lambda_layer_version" "server_python_libs" {
 }
 
 resource "aws_lambda_layer_version" "server_dependencies" {
-  layer_name          = "ServerDependencies"
+  layer_name          = "server-dependencies"
   compatible_runtimes = ["python3.13"]
   filename            = "../../../server-dependencies.zip"
   source_code_hash    = filebase64sha256("../../../server-dependencies.zip")
