@@ -1,4 +1,4 @@
-resource "google_artifact_registry_repository" "tend_attend_ml_repo" {
+resource "google_artifact_registry_repository" "ml_server" {
   location               = var.google_region
   repository_id          = var.ml_server_repository
   format                 = "DOCKER"
@@ -40,7 +40,7 @@ resource "terraform_data" "docker_push" {
     EOF
   }
   depends_on = [
-    google_artifact_registry_repository.tend_attend_ml_repo,
+    google_artifact_registry_repository.ml_server,
     google_project_service.artifact_registry_api,
   ]
 }
