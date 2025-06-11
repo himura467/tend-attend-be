@@ -30,12 +30,7 @@ export const handler = async (event: LambdaFunctionURLEvent): Promise<LambdaFunc
 
     return {
       statusCode: 200,
-      headers: {
-        "Content-Type": contentType,
-        "Access-Control-Allow-Origin": "*", // CORS を許可
-        "Access-Control-Allow-Headers": "Content-Type",
-        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-      },
+      headers: { "Content-Type": contentType },
       body: qrCodeBuffer.toString("base64"), // バイナリデータを Base64 エンコードして返す
       isBase64Encoded: true, // Base64 エンコードされていることを Lambda に伝える
     };
