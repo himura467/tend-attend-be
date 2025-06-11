@@ -30,7 +30,7 @@ resource "aws_cloudfront_origin_access_control" "this" {
 
 resource "aws_cloudfront_distribution" "this" {
   origin {
-    domain_name              = var.lambda_function_url_domain
+    domain_name              = var.server_function_url_domain
     origin_id                = "lambda"
     origin_access_control_id = aws_cloudfront_origin_access_control.this.id
     custom_origin_config {
@@ -69,7 +69,7 @@ resource "aws_cloudfront_distribution" "this" {
 resource "aws_lambda_permission" "allow_cloudfront" {
   statement_id           = "AllowCloudFrontServicePrincipal"
   action                 = "lambda:InvokeFunctionUrl"
-  function_name          = var.lambda_function_name
+  function_name          = var.server_function_name
   principal              = "cloudfront.amazonaws.com"
   source_arn             = aws_cloudfront_distribution.this.arn
   function_url_auth_type = "AWS_IAM"

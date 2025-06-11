@@ -1,5 +1,5 @@
-variable "lambda_function_url_domain" {
-  description = "Lambda function URL domain"
+variable "server_function_url_domain" {
+  description = "Lambda function URL domain for the server"
   type        = string
 }
 
@@ -25,8 +25,8 @@ variable "certificate_arn" {
   type        = string
 }
 
-variable "lambda_function_name" {
-  description = "Lambda function name"
+variable "server_function_name" {
+  description = "Lambda function name for the server"
   type        = string
 }
 
