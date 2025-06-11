@@ -1,12 +1,12 @@
-import { APIGatewayProxyEventV2, APIGatewayProxyResultV2 } from "aws-lambda";
+import { LambdaFunctionURLEvent, LambdaFunctionURLResult } from "aws-lambda";
 import { generateQrCode, QRCodeOptions } from "./qrCodeGenerator";
 
 /**
  * AWS Lambda ハンドラ関数
- * @param event API Gateway からのイベント
+ * @param event Lambda function URLs からのイベント
  * @returns HTTP レスポンス
  */
-export const handler = async (event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2> => {
+export const handler = async (event: LambdaFunctionURLEvent): Promise<LambdaFunctionURLResult> => {
   try {
     // リクエストボディから QR コードのオプションと出力タイプを取得
     const body = event.body ? JSON.parse(event.body) : {};
