@@ -15,6 +15,8 @@ module "lambda" {
   sequence_dbname           = "tend_attend_sequence"
   shard_dbname_prefix       = "tend_attend_shard"
   ml_server_url             = module.cloud_run.ml_server_url
+  qrcode_ecr_repository_url = module.ecr.qrcode_ecr_repository_url
   qrcode_lambda_timeout     = 60
   qrcode_lambda_memory_size = 128
+  depends_on                = [module.ecr]
 }
