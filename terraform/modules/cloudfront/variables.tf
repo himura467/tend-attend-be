@@ -15,6 +15,11 @@ variable "origin_read_timeout" {
   default     = 30
 }
 
+variable "qrcode_function_url_domain" {
+  description = "Lambda function URL domain for the qrcode server"
+  type        = string
+}
+
 variable "domain_name" {
   description = "Custom domain name for CloudFront distribution"
   type        = string
@@ -27,6 +32,11 @@ variable "certificate_arn" {
 
 variable "server_function_name" {
   description = "Lambda function name for the server"
+  type        = string
+}
+
+variable "qrcode_function_name" {
+  description = "Lambda function name for the qrcode server"
   type        = string
 }
 
