@@ -27,6 +27,7 @@ resource "aws_lambda_layer_version" "server_dependencies" {
 resource "aws_lambda_function" "server" {
   function_name    = "tend-attend-server-lambda-function"
   role             = aws_iam_role.lambda.arn
+  architectures    = ["x86_64"]
   filename         = "../../../server.zip"
   source_code_hash = filebase64sha256("../../../server.zip")
   handler          = "main.lambda_handler"
