@@ -227,7 +227,97 @@ describe("Lambda handler", () => {
     expect(result.statusCode).toBe(400);
     expect(result.headers?.["Content-Type"]).toBe("application/json");
     expect(JSON.parse(result.body as string)).toEqual({
-      message: "Invalid path: must contain /qrcode",
+      message: "Invalid path: must contain /qrcode/",
+    });
+    expect(mockGenerateQRCode).not.toHaveBeenCalled();
+  });
+
+  it("should return 400 error when path contains /qrcode but not /qrcode/", async () => {
+    const event: LambdaFunctionURLEvent = {
+      version: "2.0",
+      routeKey: "$default",
+      rawPath: "/qrcodeabc",
+      rawQueryString: "",
+      cookies: [],
+      headers: {
+        host: "example.com",
+      },
+      queryStringParameters: {},
+      requestContext: {
+        accountId: "123456789012",
+        apiId: "api-id",
+        domainName: "example.com",
+        domainPrefix: "api",
+        http: {
+          method: "POST",
+          path: "/qrcodeabc",
+          protocol: "HTTP/1.1",
+          sourceIp: "127.0.0.1",
+          userAgent: "Custom User Agent String",
+        },
+        requestId: "id",
+        routeKey: "$default",
+        stage: "$default",
+        time: "12/Mar/2020:19:03:58 +0000",
+        timeEpoch: 1583348638390,
+      },
+      body: undefined,
+      pathParameters: {},
+      isBase64Encoded: false,
+      stageVariables: {},
+    };
+
+    const result = (await handler(event)) as APIGatewayProxyStructuredResultV2;
+
+    expect(result.statusCode).toBe(400);
+    expect(result.headers?.["Content-Type"]).toBe("application/json");
+    expect(JSON.parse(result.body as string)).toEqual({
+      message: "Invalid path: must contain /qrcode/",
+    });
+    expect(mockGenerateQRCode).not.toHaveBeenCalled();
+  });
+
+  it("should return 400 error when path ends with /qrcode without trailing slash", async () => {
+    const event: LambdaFunctionURLEvent = {
+      version: "2.0",
+      routeKey: "$default",
+      rawPath: "/api/qrcode",
+      rawQueryString: "",
+      cookies: [],
+      headers: {
+        host: "example.com",
+      },
+      queryStringParameters: {},
+      requestContext: {
+        accountId: "123456789012",
+        apiId: "api-id",
+        domainName: "example.com",
+        domainPrefix: "api",
+        http: {
+          method: "POST",
+          path: "/api/qrcode",
+          protocol: "HTTP/1.1",
+          sourceIp: "127.0.0.1",
+          userAgent: "Custom User Agent String",
+        },
+        requestId: "id",
+        routeKey: "$default",
+        stage: "$default",
+        time: "12/Mar/2020:19:03:58 +0000",
+        timeEpoch: 1583348638390,
+      },
+      body: undefined,
+      pathParameters: {},
+      isBase64Encoded: false,
+      stageVariables: {},
+    };
+
+    const result = (await handler(event)) as APIGatewayProxyStructuredResultV2;
+
+    expect(result.statusCode).toBe(400);
+    expect(result.headers?.["Content-Type"]).toBe("application/json");
+    expect(JSON.parse(result.body as string)).toEqual({
+      message: "Invalid path: must contain /qrcode/",
     });
     expect(mockGenerateQRCode).not.toHaveBeenCalled();
   });

@@ -16,18 +16,19 @@ export const handler = async (event: LambdaFunctionURLEvent): Promise<LambdaFunc
     const rawPath = event.rawPath || "";
     const host = event.headers?.host || "";
 
-    // /qrcode 以降のパスを取得
-    const qrCodeIndex = rawPath.indexOf("/qrcode");
+    // /qrcode/ 以降のパスを取得
+    const qrCodePattern = "/qrcode/";
+    const qrCodeIndex = rawPath.indexOf(qrCodePattern);
     if (qrCodeIndex === -1) {
       return {
         statusCode: 400,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: "Invalid path: must contain /qrcode" }),
+        body: JSON.stringify({ message: "Invalid path: must contain /qrcode/" }),
       };
     }
 
-    const pathAfterQRCode = rawPath.substring(qrCodeIndex + "/qrcode".length);
-    const data = `https://${host}${pathAfterQRCode}`;
+    const pathAfterQRCode = rawPath.substring(qrCodeIndex + qrCodePattern.length);
+    const data = `https://${host}/${pathAfterQRCode}`;
 
     // data を qrCodeOptions に設定
     qrCodeOptions.data = data;
