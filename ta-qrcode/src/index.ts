@@ -13,14 +13,24 @@ export const handler = async (event: LambdaFunctionURLEvent): Promise<LambdaFunc
     const qrCodeOptions: QRCodeOptions = body.qrCodeOptions || {};
     const outputType: "png" | "svg" = body.outputType === "svg" ? "svg" : "png"; // デフォルトは 'png'
 
-    // 必須データが不足している場合はエラー
-    if (!qrCodeOptions.data) {
+    const rawPath = event.rawPath || "";
+    const host = event.headers?.host || "";
+
+    // /qrcode 以降のパスを取得
+    const qrCodeIndex = rawPath.indexOf("/qrcode");
+    if (qrCodeIndex === -1) {
       return {
         statusCode: 400,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: "Missing required parameter: data" }),
+        body: JSON.stringify({ message: "Invalid path: must contain /qrcode" }),
       };
     }
+
+    const pathAfterQRCode = rawPath.substring(qrCodeIndex + "/qrcode".length);
+    const data = `https://${host}${pathAfterQRCode}`;
+
+    // data を qrCodeOptions に設定
+    qrCodeOptions.data = data;
 
     // QR コードを生成
     const qrCodeBuffer = await generateQrCode(qrCodeOptions, outputType);
