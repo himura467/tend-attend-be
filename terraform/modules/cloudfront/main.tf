@@ -91,7 +91,7 @@ resource "aws_cloudfront_distribution" "this" {
   }
   ordered_cache_behavior {
     path_pattern           = "/qrcode/*"
-    allowed_methods        = ["GET"]
+    allowed_methods        = ["GET", "HEAD", "OPTIONS"]
     cached_methods         = ["GET", "HEAD", "OPTIONS"]
     cache_policy_id        = aws_cloudfront_cache_policy.qrcode.id
     compress               = true
