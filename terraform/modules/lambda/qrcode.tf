@@ -1,0 +1,22 @@
+resource "aws_lambda_function" "qrcode" {
+  function_name = "tend-attend-qrcode-lambda-function"
+  role          = aws_iam_role.lambda.arn
+  package_type  = "Image"
+  image_uri     = "${var.qrcode_ecr_repository_url}:latest"
+  architectures = ["x86_64"]
+  timeout       = var.qrcode_lambda_timeout
+  memory_size   = var.qrcode_lambda_memory_size
+}
+
+resource "aws_lambda_function_url" "qrcode" {
+  function_name      = aws_lambda_function.qrcode.function_name
+  authorization_type = "AWS_IAM"
+  cors {
+    allow_credentials = false
+    allow_headers     = ["content-type"]
+    allow_methods     = ["GET"]
+    allow_origins     = var.allow_origins
+    expose_headers    = []
+    max_age           = 86400
+  }
+}
