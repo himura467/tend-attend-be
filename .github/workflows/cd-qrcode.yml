@@ -3,19 +3,16 @@ name: cd-qrcode
 on:
   pull_request:
     types:
-      # - closed
-      - opened
-      - synchronize
-      - reopened
-    # branches:
-    #   - main
+      - closed
+    branches:
+      - main
     paths:
-      # - ta-qrcode/**
-      - .github/workflows/cd-qrcode.yml
+      - ta-qrcode/**
 
 jobs:
   check-release-label:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true
     outputs:
       has-release-label: ${{ steps.check-label.outputs.has-release-label }}
     steps:
@@ -31,6 +28,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: check-release-label
+    if: needs.check-release-label.outputs.has-release-label == 'true'
     permissions:
       id-token: write
       contents: read
