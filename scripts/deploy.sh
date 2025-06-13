@@ -15,8 +15,7 @@ ROOT_DIR=$(cd $(dirname $0)/..; pwd)
 cd $ROOT_DIR/terraform/environments/$3
 
 terraform init
-terraform destroy \
-  -target=module.lambda.aws_lambda_function.server \
-  -target=module.lambda.aws_lambda_function.qrcode \
-  -target=google_artifact_registry_repository.tend_attend_ml_repo
+# terraform destroy \
+#   -target=module.lambda.aws_lambda_function.server \
+#   -target=google_artifact_registry_repository.tend_attend_ml_repo
 terraform apply

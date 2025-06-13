@@ -1,26 +1,24 @@
 resource "aws_ecr_repository" "qrcode_server" {
-  name         = var.qrcode_server_repository
-  force_delete = true
+  name                 = var.qrcode_server_repository
+  image_tag_mutability = "IMMUTABLE"
 }
 
-resource "terraform_data" "docker_push" {
-  triggers_replace = [timestamp()]
-  provisioner "local-exec" {
-    command = <<EOF
-      echo "Logging in to Amazon ECR..."
-      aws ecr get-login-password --region ${var.aws_region} | docker login --username AWS --password-stdin ${aws_ecr_repository.qrcode_server.repository_url}
-
-      echo "Tagging ${var.qrcode_server_repository} image..."
-      docker tag ${var.qrcode_server_repository}:latest ${aws_ecr_repository.qrcode_server.repository_url}:latest
-
-      echo "Pushing ${var.qrcode_server_repository} image to Amazon ECR..."
-      docker push ${aws_ecr_repository.qrcode_server.repository_url}:latest
-    EOF
+data "aws_ecr_lifecycle_policy_document" "qrcode_server" {
+  rule {
+    priority    = 1
+    description = "Keep only the last 2 images"
+    selection {
+      tag_status   = "any"
+      count_type   = "imageCountMoreThan"
+      count_number = 2
+    }
+    action {
+      type = "expire"
+    }
   }
-  depends_on = [aws_ecr_repository.qrcode_server]
 }
 
-resource "time_sleep" "wait_for_push" {
-  depends_on      = [terraform_data.docker_push]
-  create_duration = "30s"
+resource "aws_ecr_lifecycle_policy" "qrcode_server" {
+  repository = aws_ecr_repository.qrcode_server.name
+  policy     = data.aws_ecr_lifecycle_policy_document.qrcode_server.json
 }
