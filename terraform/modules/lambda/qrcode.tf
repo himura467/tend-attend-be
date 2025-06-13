@@ -6,6 +6,9 @@ resource "aws_lambda_function" "qrcode" {
   architectures = ["x86_64"]
   timeout       = var.qrcode_lambda_timeout
   memory_size   = var.qrcode_lambda_memory_size
+  lifecycle {
+    ignore_changes = [image_uri]
+  }
 }
 
 resource "aws_lambda_function_url" "qrcode" {
