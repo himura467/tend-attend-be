@@ -71,7 +71,8 @@ resource "aws_iam_role_policy" "gha_qrcode_lambda" {
       {
         Effect = "Allow"
         Action = [
-          "lambda:UpdateFunctionCode"
+          "lambda:UpdateFunctionCode",
+          "lambda:GetFunctionConfiguration"
         ]
         Resource = var.qrcode_lambda_arn
       }
