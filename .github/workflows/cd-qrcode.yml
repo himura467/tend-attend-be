@@ -75,7 +75,7 @@ jobs:
         run: |
           ROOT_DIR="$(pwd)"
           # Extract pnpm version from package.json
-          PNPM_VERSION=$(grep -o '"pnpm@[^"]*"' ./ta-qrcode/package.json | grep -o '[0-9]*\.[0-9]*\.[0-9]*')
+          PNPM_VERSION=$(grep -o '"pnpm@[^"]*"' package.json | grep -o '[0-9]*\.[0-9]*\.[0-9]*')
 
           echo "Building docker image with pnpm version: $PNPM_VERSION"
           echo "Image tag: $IMAGE_TAG"
