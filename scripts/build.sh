@@ -32,7 +32,7 @@ docker build -f ${ROOT_DIR}/docker/ml-server/Dockerfile \
   --provenance=false \
   -t tend-attend-ml:latest ${ROOT_DIR} --progress=plain
 
-# QR Code Server build
+# QR code Server build
 PNPM_VERSION=$(grep -o '"pnpm@[^"]*"' ${ROOT_DIR}/ta-qrcode/package.json | grep -o '[0-9]*\.[0-9]*\.[0-9]*')
 docker build -f ${ROOT_DIR}/docker/qrcode-server/Dockerfile \
   --build-arg PNPM_VERSION=${PNPM_VERSION} \
