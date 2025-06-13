@@ -61,3 +61,20 @@ resource "aws_iam_role_policy" "gha_qrcode_ecr" {
     ]
   })
 }
+
+resource "aws_iam_role_policy" "gha_qrcode_lambda" {
+  name = "gha-qrcode-lambda-policy"
+  role = aws_iam_role.gha.id
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "lambda:UpdateFunctionCode"
+        ]
+        Resource = var.qrcode_lambda_arn
+      }
+    ]
+  })
+}

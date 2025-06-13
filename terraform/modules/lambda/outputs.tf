@@ -13,6 +13,11 @@ output "server_function_url_domain" {
   value       = replace(replace(aws_lambda_function_url.server.function_url, "https://", ""), "/", "")
 }
 
+output "qrcode_function_arn" {
+  description = "Function ARN of the QR code Lambda function"
+  value       = aws_lambda_function.qrcode.arn
+}
+
 output "qrcode_invoke_arn" {
   description = "Invoke ARN of the QR code Lambda function"
   value       = aws_lambda_function.qrcode.invoke_arn
