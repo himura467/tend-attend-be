@@ -1,4 +1,9 @@
-output "repository_url" {
-  description = "URL of the Amazon ECR repository"
-  value       = aws_ecr_repository.tend_attend_repo.repository_url
+output "qrcode_ecr_repository_arn" {
+  description = "The ARN of the ECR repository for the QR code server Lambda function"
+  value       = aws_ecr_repository.qrcode_server.arn
+}
+
+output "qrcode_ecr_repository_url" {
+  description = "The URL of the ECR repository for the QR code server Lambda function"
+  value       = aws_ecr_repository.qrcode_server.repository_url
 }

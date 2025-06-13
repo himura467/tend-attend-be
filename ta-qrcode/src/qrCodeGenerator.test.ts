@@ -1,14 +1,14 @@
 // import fs from "fs";
 // import path from "path";
 import { describe, expect, it } from "vitest";
-import { generateQrCode, QRCodeOptions } from "./qrCodeGenerator";
+import { generateQRCode, QRCodeOptions } from "./qrCodeGenerator";
 
-describe("generateQrCode", () => {
+describe("generateQRCode", () => {
   it("should generate a PNG QR code with default options", async () => {
     const options = {
       data: "https://vitest.dev",
     };
-    const buffer = await generateQrCode(options, "png"); // outputType を 'png' に指定
+    const buffer = await generateQRCode(options, "png"); // outputType を 'png' に指定
     expect(buffer).toBeInstanceOf(Buffer);
     expect(buffer.length).toBeGreaterThan(1000); // ある程度のサイズがあることを確認
 
@@ -30,7 +30,7 @@ describe("generateQrCode", () => {
         color: "#FFFFCC",
       },
     };
-    const buffer = await generateQrCode(options, "png"); // outputType を 'png' に指定
+    const buffer = await generateQRCode(options, "png"); // outputType を 'png' に指定
     expect(buffer).toBeInstanceOf(Buffer);
     expect(buffer.length).toBeGreaterThan(1000);
 
@@ -45,7 +45,7 @@ describe("generateQrCode", () => {
         color: "#007ACC",
       },
     };
-    const buffer = await generateQrCode(options, "svg"); // outputType を 'svg' に指定
+    const buffer = await generateQRCode(options, "svg"); // outputType を 'svg' に指定
     expect(buffer).toBeInstanceOf(Buffer);
     expect(buffer.length).toBeGreaterThan(500);
     expect(buffer.toString()).toContain("<svg"); // SVG であることを確認
@@ -56,7 +56,7 @@ describe("generateQrCode", () => {
 
   it("should handle missing data gracefully", async () => {
     const options = {}; // data が不足している
-    // generateQrCode が `data` の不足でエラーをスローすることを期待
-    await expect(generateQrCode(options, "png")).rejects.toThrow();
+    // generateQRCode が `data` の不足でエラーをスローすることを期待
+    await expect(generateQRCode(options, "png")).rejects.toThrow();
   }, 10000);
 });
