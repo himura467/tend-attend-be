@@ -21,8 +21,7 @@ resource "aws_iam_role" "gha" {
         Condition = {
           StringLike = {
             "token.actions.githubusercontent.com:sub" = [
-              # "repo:himura467/tend-attend-be:ref:refs/heads/main",
-              "repo:himura467/tend-attend-be:ref:refs/heads/develop",
+              "repo:himura467/tend-attend-be:ref:refs/heads/main",
               "repo:himura467/tend-attend-be:pull_request"
             ]
           }
