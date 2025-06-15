@@ -2,9 +2,9 @@
 
 set -e
 
-ROOT_DIR=$(cd $(dirname $0)/..; pwd)
+ROOT_DIR=$(cd "$(dirname "$0")"/..; pwd)
 
-command=$@
+command="$*"
 
 projects=(
   "ta-api"
@@ -14,7 +14,7 @@ projects=(
 )
 
 for project in "${projects[@]}"; do
-  echo "Running ${command} for ${project}"
-  cd ${ROOT_DIR}/${project}
-  poetry ${command}
+  echo "Running $command for $project"
+  cd "$ROOT_DIR/$project"
+  poetry "$command"
 done

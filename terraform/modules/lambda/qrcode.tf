@@ -16,10 +16,10 @@ resource "aws_lambda_function_url" "qrcode" {
   authorization_type = "AWS_IAM"
   cors {
     allow_credentials = false
-    allow_headers     = ["content-type"]
+    allow_headers     = []
     allow_methods     = ["GET"]
     allow_origins     = var.allow_origins
-    expose_headers    = []
+    expose_headers    = ["content-type"]
     max_age           = 86400
   }
 }
