@@ -10,9 +10,9 @@ fi
 export AWS_PROFILE=$1
 export CLOUDSDK_ACTIVE_CONFIG_NAME=$2
 
-ROOT_DIR=$(cd $(dirname $0)/..; pwd)
+ROOT_DIR=$(cd "$(dirname "$0")"/..; pwd)
 
-cd $ROOT_DIR/terraform/environments/$3
+cd "$ROOT_DIR/terraform/environments/$3"
 
 terraform init
 # terraform destroy \
