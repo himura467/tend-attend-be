@@ -13,6 +13,8 @@ const mockGenerateQRCode = vi.mocked(qrCodeGenerator.generateQRCode);
 describe("Lambda handler", () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    // 環境変数をモック
+    process.env.DOMAIN_NAME = "example.com";
   });
 
   it("should generate QR code with PNG format by default", async () => {
@@ -25,9 +27,7 @@ describe("Lambda handler", () => {
       rawPath: "/qrcode/test",
       rawQueryString: "",
       cookies: [],
-      headers: {
-        host: "example.com",
-      },
+      headers: {},
       queryStringParameters: {},
       requestContext: {
         accountId: "123456789012",
@@ -85,9 +85,7 @@ describe("Lambda handler", () => {
       rawPath: "/qrcode/svg-test",
       rawQueryString: "",
       cookies: [],
-      headers: {
-        host: "api.example.com",
-      },
+      headers: {},
       queryStringParameters: {},
       requestContext: {
         accountId: "123456789012",
@@ -131,7 +129,7 @@ describe("Lambda handler", () => {
         dotsOptions: {
           color: "#FF0000",
         },
-        data: "https://api.example.com/svg-test",
+        data: "https://example.com/svg-test",
       },
       "svg",
     );
@@ -147,9 +145,7 @@ describe("Lambda handler", () => {
       rawPath: "/qrcode/empty-body",
       rawQueryString: "",
       cookies: [],
-      headers: {
-        host: "localhost:3000",
-      },
+      headers: {},
       queryStringParameters: {},
       requestContext: {
         accountId: "123456789012",
@@ -181,7 +177,7 @@ describe("Lambda handler", () => {
     expect(result.headers?.["Content-Type"]).toBe("image/png");
     expect(mockGenerateQRCode).toHaveBeenCalledWith(
       {
-        data: "https://localhost:3000/empty-body",
+        data: "https://example.com/empty-body",
       },
       "png",
     );
@@ -194,9 +190,7 @@ describe("Lambda handler", () => {
       rawPath: "/invalid/path",
       rawQueryString: "",
       cookies: [],
-      headers: {
-        host: "example.com",
-      },
+      headers: {},
       queryStringParameters: {},
       requestContext: {
         accountId: "123456789012",
@@ -239,9 +233,7 @@ describe("Lambda handler", () => {
       rawPath: "/qrcodeabc",
       rawQueryString: "",
       cookies: [],
-      headers: {
-        host: "example.com",
-      },
+      headers: {},
       queryStringParameters: {},
       requestContext: {
         accountId: "123456789012",
@@ -277,51 +269,6 @@ describe("Lambda handler", () => {
     expect(mockGenerateQRCode).not.toHaveBeenCalled();
   });
 
-  it("should return 400 error when path ends with /qrcode without trailing slash", async () => {
-    const event: LambdaFunctionURLEvent = {
-      version: "2.0",
-      routeKey: "$default",
-      rawPath: "/api/qrcode",
-      rawQueryString: "",
-      cookies: [],
-      headers: {
-        host: "example.com",
-      },
-      queryStringParameters: {},
-      requestContext: {
-        accountId: "123456789012",
-        apiId: "api-id",
-        domainName: "example.com",
-        domainPrefix: "api",
-        http: {
-          method: "POST",
-          path: "/api/qrcode",
-          protocol: "HTTP/1.1",
-          sourceIp: "127.0.0.1",
-          userAgent: "Custom User Agent String",
-        },
-        requestId: "id",
-        routeKey: "$default",
-        stage: "$default",
-        time: "12/Mar/2020:19:03:58 +0000",
-        timeEpoch: 1583348638390,
-      },
-      body: undefined,
-      pathParameters: {},
-      isBase64Encoded: false,
-      stageVariables: {},
-    };
-
-    const result = (await handler(event)) as APIGatewayProxyStructuredResultV2;
-
-    expect(result.statusCode).toBe(400);
-    expect(result.headers?.["Content-Type"]).toBe("application/json");
-    expect(JSON.parse(result.body as string)).toEqual({
-      message: "Invalid path: must start with /qrcode/",
-    });
-    expect(mockGenerateQRCode).not.toHaveBeenCalled();
-  });
-
   it("should return 400 error when path has /qrcode/ in the middle", async () => {
     const event: LambdaFunctionURLEvent = {
       version: "2.0",
@@ -329,9 +276,7 @@ describe("Lambda handler", () => {
       rawPath: "/abc/qrcode/test",
       rawQueryString: "",
       cookies: [],
-      headers: {
-        host: "example.com",
-      },
+      headers: {},
       queryStringParameters: {},
       requestContext: {
         accountId: "123456789012",
@@ -367,53 +312,6 @@ describe("Lambda handler", () => {
     expect(mockGenerateQRCode).not.toHaveBeenCalled();
   });
 
-  it("should handle missing host header gracefully", async () => {
-    const mockBuffer = Buffer.from("mock-data");
-    mockGenerateQRCode.mockResolvedValue(mockBuffer);
-
-    const event: LambdaFunctionURLEvent = {
-      version: "2.0",
-      routeKey: "$default",
-      rawPath: "/qrcode/no-host",
-      rawQueryString: "",
-      cookies: [],
-      headers: {},
-      queryStringParameters: {},
-      requestContext: {
-        accountId: "123456789012",
-        apiId: "api-id",
-        domainName: "example.com",
-        domainPrefix: "api",
-        http: {
-          method: "POST",
-          path: "/qrcode/no-host",
-          protocol: "HTTP/1.1",
-          sourceIp: "127.0.0.1",
-          userAgent: "Custom User Agent String",
-        },
-        requestId: "id",
-        routeKey: "$default",
-        stage: "$default",
-        time: "12/Mar/2020:19:03:58 +0000",
-        timeEpoch: 1583348638390,
-      },
-      body: undefined,
-      pathParameters: {},
-      isBase64Encoded: false,
-      stageVariables: {},
-    };
-
-    const result = (await handler(event)) as APIGatewayProxyStructuredResultV2;
-
-    expect(result.statusCode).toBe(200);
-    expect(mockGenerateQRCode).toHaveBeenCalledWith(
-      {
-        data: "https:///no-host",
-      },
-      "png",
-    );
-  });
-
   it("should return 500 error when QR code generation fails", async () => {
     const mockError = new Error("QR code generation failed");
     mockGenerateQRCode.mockRejectedValue(mockError);
@@ -424,9 +322,7 @@ describe("Lambda handler", () => {
       rawPath: "/qrcode/error-test",
       rawQueryString: "",
       cookies: [],
-      headers: {
-        host: "example.com",
-      },
+      headers: {},
       queryStringParameters: {},
       requestContext: {
         accountId: "123456789012",
@@ -474,9 +370,7 @@ describe("Lambda handler", () => {
       rawPath: "/qrcode/invalid-json",
       rawQueryString: "",
       cookies: [],
-      headers: {
-        host: "example.com",
-      },
+      headers: {},
       queryStringParameters: {},
       requestContext: {
         accountId: "123456789012",
@@ -526,9 +420,7 @@ describe("Lambda handler", () => {
       rawPath: "/qrcode/user/123/profile",
       rawQueryString: "",
       cookies: [],
-      headers: {
-        host: "api.example.com",
-      },
+      headers: {},
       queryStringParameters: {},
       requestContext: {
         accountId: "123456789012",
@@ -559,7 +451,7 @@ describe("Lambda handler", () => {
     expect(result.statusCode).toBe(200);
     expect(mockGenerateQRCode).toHaveBeenCalledWith(
       {
-        data: "https://api.example.com/user/123/profile",
+        data: "https://example.com/user/123/profile",
       },
       "png",
     );
