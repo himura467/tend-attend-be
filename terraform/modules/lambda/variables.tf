@@ -87,3 +87,8 @@ variable "qrcode_lambda_memory_size" {
   description = "Memory size for the QR code Lambda function in MB"
   type        = number
 }
+
+variable "domain_name" {
+  description = "Domain name for the application"
+  type        = string
+}
