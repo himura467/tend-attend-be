@@ -18,5 +18,6 @@ module "lambda" {
   qrcode_ecr_repository_url = module.ecr.qrcode_ecr_repository_url
   qrcode_lambda_timeout     = 60
   qrcode_lambda_memory_size = 128
+  domain_name               = var.domain_name
   depends_on                = [module.ecr]
 }

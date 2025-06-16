@@ -8,13 +8,18 @@ import { generateQRCode, QRCodeOptions } from "./qrCodeGenerator";
  */
 export const handler = async (event: LambdaFunctionURLEvent): Promise<LambdaFunctionURLResult> => {
   try {
+    const domainName = process.env.DOMAIN_NAME;
+    // 環境変数 DOMAIN_NAME が設定されていない場合はエラーを投げる
+    if (!domainName) {
+      throw new Error("DOMAIN_NAME environment variable is not set");
+    }
+
     // リクエストボディから QR コードのオプションと出力タイプを取得
     const body = event.body ? JSON.parse(event.body) : {};
     const qrCodeOptions: QRCodeOptions = body.qrCodeOptions || {};
     const outputType: "png" | "svg" = body.outputType === "svg" ? "svg" : "png"; // デフォルトは 'png'
 
     const rawPath = event.rawPath || "";
-    const host = event.headers?.host || "";
 
     // パスが /qrcode/ で始まることを確認
     const qrCodePattern = "/qrcode/";
@@ -27,7 +32,7 @@ export const handler = async (event: LambdaFunctionURLEvent): Promise<LambdaFunc
     }
 
     const pathAfterQRCode = rawPath.substring(qrCodePattern.length);
-    const data = `https://${host}/${pathAfterQRCode}`;
+    const data = `https://${domainName}/${pathAfterQRCode}`;
 
     // data を qrCodeOptions に設定
     qrCodeOptions.data = data;
