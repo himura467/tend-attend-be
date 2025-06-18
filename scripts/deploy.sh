@@ -2,17 +2,16 @@
 
 set -e
 
-if [[ $# -ne 3 ]]; then
-  echo "Usage: $0 <aws-profile> <gcloud-config-name> <environment>"
+if [[ $# -ne 2 ]]; then
+  echo "Usage: $0 <gcloud-config-name> <environment>"
   exit 1
 fi
 
-export AWS_PROFILE=$1
-export CLOUDSDK_ACTIVE_CONFIG_NAME=$2
+export CLOUDSDK_ACTIVE_CONFIG_NAME=$1
 
 ROOT_DIR=$(cd "$(dirname "$0")"/..; pwd)
 
-cd "$ROOT_DIR/terraform/environments/$3"
+cd "$ROOT_DIR/terraform/environments/$2"
 
 terraform init
 # terraform destroy \
