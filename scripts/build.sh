@@ -19,9 +19,9 @@ docker cp "$SERVER_CONTAINER_ID":/python "$ROOT_DIR"
 docker cp "$SERVER_CONTAINER_ID":/main.py "$ROOT_DIR"
 docker cp "$SERVER_CONTAINER_ID":/dependencies "$ROOT_DIR"
 docker rm -v "$SERVER_CONTAINER_ID"
-zip -r -X server-python.zip python/ -x "*/__pycache__/*"
+zip -r -X server-python.zip python/ -x '*/__pycache__/*'
 zip -r -X server.zip main.py
-cd dependencies && zip -r -X ../server-dependencies.zip python/ -x "*/__pycache__/*" && cd ..
+cd dependencies && zip -r -X ../server-dependencies.zip python/ -x '*/__pycache__/*' && cd ..
 rm -rf "$ROOT_DIR/python" "$ROOT_DIR/main.py" "$ROOT_DIR/dependencies" "$ROOT_DIR/requirements.txt"
 
 # ML Server build
