@@ -2,16 +2,14 @@
 
 set -e
 
-if [[ $# -ne 2 ]]; then
-  echo "Usage: $0 <gcloud-config-name> <environment>"
+if [[ $# -ne 1 ]]; then
+  echo "Usage: $0 <environment>"
   exit 1
 fi
 
-export CLOUDSDK_ACTIVE_CONFIG_NAME=$1
-
 ROOT_DIR=$(cd "$(dirname "$0")"/..; pwd)
 
-cd "$ROOT_DIR/terraform/environments/$2"
+cd "$ROOT_DIR/terraform/environments/$1"
 
 OP_VAULT_NAME="Tend Attend" OP_APP_ENV="Production" op run --env-file $ROOT_DIR/terraform/provider.env -- terraform init
 # terraform destroy \
