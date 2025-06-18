@@ -31,6 +31,7 @@ variable "cookie_domain" {
 variable "jwt_secret_key" {
   description = "JWT secret key (openssl rand -hex 32)"
   type        = string
+  sensitive   = true
 }
 
 variable "aurora_credentials" {

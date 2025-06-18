@@ -7,10 +7,10 @@ ROOT_DIR=$(cd "$(dirname "$0")"/..; pwd)
 command="$*"
 
 projects=(
-  "ta-api"
-  "ta-cli"
-  "ta-core"
-  "ta-ml"
+  'ta-api'
+  'ta-cli'
+  'ta-core'
+  'ta-ml'
 )
 
 for project in "${projects[@]}"; do
