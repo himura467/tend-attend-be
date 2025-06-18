@@ -33,3 +33,9 @@ variable "domain_name" {
   type        = string
   default     = "tend-attend.com"
 }
+
+variable "op_account" {
+  description = "1Password account"
+  type        = string
+  sensitive   = true
+}
