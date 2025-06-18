@@ -25,15 +25,15 @@ class CORSMiddleware(BaseHTTPMiddleware):
 app.add_middleware(CORSMiddleware)
 
 app.include_router(
-    admin.router,
-    prefix="/admin",
-    tags=["admin"],
-)
-
-app.include_router(
     account.router,
     prefix="/accounts",
     tags=["accounts"],
+)
+
+app.include_router(
+    admin.router,
+    prefix="/admin",
+    tags=["admin"],
 )
 
 app.include_router(
@@ -43,15 +43,15 @@ app.include_router(
 )
 
 app.include_router(
-    verify.router,
-    prefix="/verify",
-    tags=["verify"],
-)
-
-app.include_router(
     event.router,
     prefix="/events",
     tags=["events"],
+)
+
+app.include_router(
+    verify.router,
+    prefix="/verify",
+    tags=["verify"],
 )
 
 
