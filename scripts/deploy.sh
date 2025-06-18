@@ -18,4 +18,4 @@ terraform init
 # terraform destroy \
 #   -target=module.lambda.aws_lambda_function.server \
 #   -target=google_artifact_registry_repository.tend_attend_ml_repo
-terraform apply
+OP_VAULT_NAME="Tend Attend" OP_APP_ENV="Production" op run --env-file $ROOT_DIR/terraform/provider.env -- terraform apply

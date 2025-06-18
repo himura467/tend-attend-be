@@ -34,8 +34,8 @@ variable "domain_name" {
   default     = "tend-attend.com"
 }
 
-variable "op_account" {
-  description = "1Password account"
+variable "op_service_account_token" {
+  description = "1Password service account token"
   type        = string
   sensitive   = true
 }

@@ -8,5 +8,5 @@ terraform {
 }
 
 provider "onepassword" {
-  account = var.op_account
+  service_account_token = var.service_account_token
 }

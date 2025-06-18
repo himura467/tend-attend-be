@@ -1,4 +1,4 @@
 module "op" {
-  source     = "../../modules/op"
-  op_account = var.op_account
+  source                = "../../modules/op"
+  service_account_token = var.op_service_account_token
 }
