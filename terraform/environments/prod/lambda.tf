@@ -2,10 +2,10 @@ module "lambda" {
   source                    = "../../modules/lambda"
   subnet_ids                = module.vpc.private_subnets[*].id
   security_group_ids        = [module.private_sg.aurora_sg_id]
-  allow_origins             = ["https://${var.domain_name}"]
+  allow_origins             = ["https://${module.op.domain_name}"]
   server_lambda_timeout     = 900
   server_lambda_memory_size = 128
-  cookie_domain             = var.domain_name
+  cookie_domain             = module.op.domain_name
   jwt_secret_key            = module.op.jwt_secret_key
   aurora_credentials        = module.secrets_manager.aurora_credentials
   aws_region                = var.aws_region
@@ -18,6 +18,6 @@ module "lambda" {
   qrcode_ecr_repository_url = module.ecr.qrcode_ecr_repository_url
   qrcode_lambda_timeout     = 60
   qrcode_lambda_memory_size = 128
-  domain_name               = var.domain_name
+  domain_name               = module.op.domain_name
   depends_on                = [module.ecr]
 }

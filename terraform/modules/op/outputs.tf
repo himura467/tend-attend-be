@@ -1,3 +1,8 @@
+output "domain_name" {
+  description = "Domain name for the application"
+  value       = local.fields["Domain Name"]
+}
+
 output "jwt_secret_key" {
   description = "JWT secret key used for signing tokens"
   value       = local.fields["JWT Secret Key"]

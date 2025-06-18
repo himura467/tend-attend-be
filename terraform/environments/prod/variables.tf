@@ -17,9 +17,3 @@ variable "google_region" {
   description = "Google region"
   type        = string
 }
-
-variable "domain_name" {
-  description = "Domain name"
-  type        = string
-  default     = "tend-attend.com"
-}
