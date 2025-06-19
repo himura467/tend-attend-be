@@ -83,6 +83,7 @@ jobs:
           echo "Updating Cloud Run service $ML_CLOUD_RUN_SERVICE_NAME with new image..."
           gcloud run services update "$ML_CLOUD_RUN_SERVICE_NAME" \
             --image="${GOOGLE_REGION}-docker.pkg.dev/$GOOGLE_PROJECT_ID/$ML_GAR_REPOSITORY/$ML_GAR_REPOSITORY:$IMAGE_TAG" \
+            --region="$GOOGLE_REGION" \
             --quiet
 
           echo "Successfully updated Cloud Run service $ML_CLOUD_RUN_SERVICE_NAME"
