@@ -3,6 +3,11 @@ variable "google_project_id" {
   type        = string
 }
 
+variable "cloud_run_service_name" {
+  description = "Name of the Cloud Run service"
+  type        = string
+}
+
 variable "google_region" {
   description = "Google region"
   type        = string

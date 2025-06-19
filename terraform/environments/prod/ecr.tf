@@ -1,4 +1,4 @@
 module "ecr" {
   source                   = "../../modules/ecr"
-  qrcode_server_repository = "tend-attend-qrcode"
+  qrcode_server_repository = module.op.qrcode_ecr_repository
 }
