@@ -18,10 +18,13 @@ resource "google_iam_workload_identity_pool_provider" "gha" {
   display_name                       = "GHA Provider"
   attribute_mapping = {
     "google.subject"       = "assertion.sub"
-    "attribute.actor"      = "assertion.actor"
     "attribute.repository" = "assertion.repository"
   }
-  attribute_condition = "assertion.repository == \"${var.github_org}/${var.github_repo}\""
+  attribute_condition = <<EOT
+    assertion.repository == "${var.github_org}/${var.github_repo}" &&
+    assertion.event_name == "pull_request" &&
+    assertion.base_ref == "refs/heads/main"
+  EOT
   oidc {
     issuer_uri = "https://token.actions.githubusercontent.com"
   }
