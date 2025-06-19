@@ -68,11 +68,18 @@ This is a microservices-based backend system consisting of the following compone
 - **Poetry** - Python dependency management
 - **Node.js** - Version specified in `.node-version`
 - **pnpm** - Node.js package manager
+- **1Password CLI** - For secure credential management (`op` command)
 - **Docker & Docker Compose** - For local development
-- **1Password CLI** - For environment variable management (`op` command)
-- **AWS CLI** - For AWS deployment (optional)
-- **Google Cloud CLI** - For Google Cloud deployment (optional)
 - **Terraform** - For infrastructure deployment (optional)
+
+### 1Password Integration
+
+The project uses 1Password for secure credential management across all environments. This includes:
+
+- **Service Account Authentication** - Uses 1Password service account tokens for automated deployments
+- **Cloud Provider Credentials** - Manages AWS and Google Cloud credentials securely
+- **Environment Variables** - Centralizes configuration management through 1Password vaults
+- **Terraform Variables** - Automatically injects sensitive values during infrastructure provisioning
 
 ## 🚀 Local Setup
 
@@ -103,8 +110,12 @@ cd ta-qrcode && pnpm install
 The application uses 1Password for secure environment variable management. Ensure you have:
 
 1. **1Password CLI installed** and authenticated
-2. **Proper vault access** configured
-3. **Environment variables** set up in your 1Password vault
+2. **Proper vault access** configured to the "Tend Attend" vault
+3. **Environment variables** set up in your 1Password vault with the following structure:
+
+- Vault Name: "Tend Attend"
+- Item Name: "Local"
+- Required fields organized in appropriate sections
 
 ### 4. Start Services
 
@@ -198,35 +209,27 @@ The project uses a multi-cloud architecture with both AWS and Google Cloud Platf
 - **AWS**: Hosts the main API (Lambda), QR code generation service (Lambda), database (Aurora), and CDN (CloudFront)
 - **Google Cloud**: Hosts the ML service (Cloud Run)
 
-### Build and Deployment Scripts
+### 1Password-Integrated Deployment
 
-Use the provided scripts for building and deployment:
+The deployment process is fully integrated with 1Password for secure credential management:
 
 ```bash
 ./scripts/build.sh  # Build all components
-./scripts/deploy.sh <aws-profile> <gcloud-config-name> <environment>
+./scripts/deploy.sh <environment>
 ```
 
-The deployment script handles the complete deployment process including:
+The deployment script automatically:
 
-- Terraform backend preparation
-- Infrastructure provisioning with `terraform init`, `terraform plan`, and `terraform apply`
-- Both AWS and Google Cloud resources deployment
+- **Retrieves credentials** from 1Password vault using service account authentication
+- **Injects environment variables** securely during Terraform execution
+- **Provisions infrastructure** with `terraform init` and `terraform apply`
+- **Manages multi-cloud resources** across AWS and Google Cloud
 
-**Initial Setup (One-time):**
+**Required 1Password Setup:**
 
-Prepare Terraform backend before first deployment:
-
-```bash
-cd terraform/environments/prod
-# Run the commands in README.md to set up S3 backend
-```
-
-**Example Deployment:**
-
-```bash
-./scripts/deploy.sh default my-gcp-config prod
-```
+1. **Vault Structure**: "Tend Attend" vault with "Production" item
+2. **Credential Fields**: AWS credentials, Google Cloud service account, and Terraform variables
+3. **Service Account Token**: For automated deployment authentication
 
 ## 📁 Project Structure
 
