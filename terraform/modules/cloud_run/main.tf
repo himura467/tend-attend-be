@@ -33,6 +33,11 @@ resource "google_cloud_run_v2_service" "ml_server" {
     timeout = "600s"
   }
   depends_on = [google_project_service.cloud_run_admin]
+  lifecycle {
+    ignore_changes = [
+      template[0].containers[0].image
+    ]
+  }
 }
 
 data "google_iam_policy" "cloud_run_invoker" {
