@@ -32,3 +32,9 @@ resource "google_project_iam_member" "gha_gar_writer" {
   role    = "roles/artifactregistry.writer"
   member  = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.gha.name}/attribute.repository/${var.github_org}/${var.github_repo}"
 }
+
+resource "google_project_iam_member" "gha_cloud_run_developer" {
+  project = var.google_project_id
+  role    = "roles/run.developer"
+  member  = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.gha.name}/attribute.repository/${var.github_org}/${var.github_repo}"
+}
