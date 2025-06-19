@@ -1,10 +1,10 @@
-resource "google_project_service" "cloud_run_admin_api" {
+resource "google_project_service" "cloud_run_admin" {
   project = var.google_project_id
   service = "run.googleapis.com"
 }
 
 resource "google_cloud_run_v2_service" "ml_server" {
-  name                = "tend-attend-ml-cloud-run"
+  name                = var.cloud_run_service_name
   location            = var.google_region
   deletion_protection = false
   template {
@@ -32,7 +32,12 @@ resource "google_cloud_run_v2_service" "ml_server" {
     }
     timeout = "600s"
   }
-  depends_on = [google_project_service.cloud_run_admin_api]
+  depends_on = [google_project_service.cloud_run_admin]
+  lifecycle {
+    ignore_changes = [
+      template[0].containers[0].image
+    ]
+  }
 }
 
 data "google_iam_policy" "cloud_run_invoker" {

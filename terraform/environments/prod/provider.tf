@@ -9,6 +9,10 @@ terraform {
       source  = "hashicorp/google"
       version = "6.31.1"
     }
+    google-beta = {
+      source  = "hashicorp/google-beta"
+      version = "6.40.0"
+    }
   }
 }
 
@@ -24,4 +28,13 @@ provider "aws" {
 provider "google" {
   project = var.google_project_id
   region  = var.google_region
+}
+
+provider "google-beta" {
+  project = var.google_project_id
+  region  = var.google_region
+}
+
+data "google_project" "this" {
+  project_id = var.google_project_id
 }
