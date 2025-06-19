@@ -8,6 +8,9 @@ resource "google_artifact_registry_repository" "ml_server" {
   repository_id          = var.ml_server_repository
   format                 = "DOCKER"
   cleanup_policy_dry_run = false
+  docker_config {
+    immutable_tags = true
+  }
   cleanup_policies {
     id     = "keep-minimum-versions"
     action = "KEEP"
