@@ -1,4 +1,4 @@
-resource "aws_iam_openid_connect_provider" "github" {
+resource "aws_iam_openid_connect_provider" "gha" {
   url            = "https://token.actions.githubusercontent.com"
   client_id_list = ["sts.amazonaws.com"]
   thumbprint_list = [
@@ -15,7 +15,7 @@ resource "aws_iam_role" "gha" {
       {
         Effect = "Allow"
         Principal = {
-          Federated = aws_iam_openid_connect_provider.github.arn
+          Federated = aws_iam_openid_connect_provider.gha.arn
         }
         Action = "sts:AssumeRoleWithWebIdentity"
         Condition = {
