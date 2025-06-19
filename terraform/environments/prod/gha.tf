@@ -5,4 +5,5 @@ module "gha" {
   qrcode_server_ecr_arn = module.ecr.qrcode_ecr_repository_arn
   qrcode_lambda_arn     = module.lambda.qrcode_function_arn
   google_project_id     = var.google_project_id
+  google_project_number = data.google_project.this.number
 }

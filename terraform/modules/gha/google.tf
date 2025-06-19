@@ -38,3 +38,9 @@ resource "google_project_iam_member" "gha_cloud_run_developer" {
   role    = "roles/run.developer"
   member  = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.gha.name}/attribute.repository/${var.github_org}/${var.github_repo}"
 }
+
+resource "google_service_account_iam_member" "gha_act_as_compute_sa" {
+  service_account_id = "projects/${var.google_project_id}/serviceAccounts/${var.google_project_number}-compute@developer.gserviceaccount.com"
+  role               = "roles/iam.serviceAccountUser"
+  member             = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.gha.name}/attribute.repository/${var.github_org}/${var.github_repo}"
+}

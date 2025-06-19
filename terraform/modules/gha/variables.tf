@@ -22,3 +22,8 @@ variable "google_project_id" {
   description = "Google Cloud project ID"
   type        = string
 }
+
+variable "google_project_number" {
+  description = "Google Cloud project number"
+  type        = string
+}
