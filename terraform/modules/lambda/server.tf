@@ -3,10 +3,10 @@ resource "aws_s3_bucket" "server_python_layer" {
 }
 
 resource "aws_s3_object" "server_python_layer" {
-  bucket = aws_s3_bucket.server_python_layer.id
-  key    = "server-python.zip"
-  source = "../../../server-python.zip"
-  etag   = filemd5("../../../server-python.zip")
+  bucket      = aws_s3_bucket.server_python_layer.id
+  key         = "server-python.zip"
+  source      = "../../../server-python.zip"
+  source_hash = filemd5("../../../server-python.zip")
 }
 
 resource "aws_lambda_layer_version" "server_python_libs" {
