@@ -89,7 +89,7 @@ jobs:
           echo "Pushing docker image to Amazon ECR..."
           docker push "$REGISTRY/$QRCODE_ECR_REPOSITORY:$IMAGE_TAG"
 
-          echo "Successfully pushed docker image to $REGISTRY/$QRCODE_ECR_REPOSITORY"
+          echo "Successfully pushed docker image to Amazon ECR"
       - name: Update Lambda function image
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
