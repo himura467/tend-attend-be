@@ -1,3 +1,13 @@
+output "github_org" {
+  description = "GitHub organization name"
+  value       = local.fields["GitHub Org"]
+}
+
+output "github_repo" {
+  description = "GitHub repository name"
+  value       = local.fields["GitHub Repo"]
+}
+
 output "domain_name" {
   description = "Domain name for the application"
   value       = local.fields["Domain Name"]
