@@ -1,0 +1,34 @@
+# https://github.com/google-github-actions/auth#preferred-direct-workload-identity-federation
+
+resource "google_project_service" "iam" {
+  project = var.google_project_id
+  service = "iam.googleapis.com"
+}
+
+resource "google_iam_workload_identity_pool" "gha" {
+  provider                  = google-beta
+  workload_identity_pool_id = "gha-pool"
+  display_name              = "GHA Workload Identity Pool"
+  depends_on                = [google_project_service.iam]
+}
+
+resource "google_iam_workload_identity_pool_provider" "gha" {
+  workload_identity_pool_id          = google_iam_workload_identity_pool.gha.workload_identity_pool_id
+  workload_identity_pool_provider_id = "gha-provider"
+  display_name                       = "GHA Provider"
+  attribute_mapping = {
+    "google.subject"       = "assertion.sub"
+    "attribute.actor"      = "assertion.actor"
+    "attribute.repository" = "assertion.repository"
+  }
+  attribute_condition = "assertion.repository == \"${var.github_org}/${var.github_repo}\""
+  oidc {
+    issuer_uri = "https://token.actions.githubusercontent.com"
+  }
+}
+
+resource "google_project_iam_member" "gha_gar_writer" {
+  project = var.google_project_id
+  role    = "roles/artifactregistry.writer"
+  member  = "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.gha.name}/attribute.repository/${var.github_org}/${var.github_repo}"
+}

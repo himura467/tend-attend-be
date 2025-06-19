@@ -17,3 +17,8 @@ variable "qrcode_lambda_arn" {
   description = "ARN of the Lambda function for QR code generation"
   type        = string
 }
+
+variable "google_project_id" {
+  description = "Google Cloud project ID"
+  type        = string
+}
