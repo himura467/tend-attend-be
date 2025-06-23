@@ -23,7 +23,7 @@ resource "google_artifact_registry_repository" "ml_server" {
     action = "DELETE"
     condition {
       tag_state  = "ANY"
-      older_than = "30d"
+      older_than = "24h"
     }
   }
 }
