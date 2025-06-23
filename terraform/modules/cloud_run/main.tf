@@ -35,7 +35,9 @@ resource "google_cloud_run_v2_service" "ml_server" {
   depends_on = [google_project_service.cloud_run_admin]
   lifecycle {
     ignore_changes = [
-      template[0].containers[0].image
+      template[0].containers[0].image,
+      client,
+      client_version
     ]
   }
 }
