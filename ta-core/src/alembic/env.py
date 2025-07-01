@@ -109,7 +109,7 @@ def run_migrations_offline() -> None:
         logger.info("Migrating database %s" % name)
         file_ = "%s.sql" % name
         logger.info("Writing output to %s" % file_)
-        urls = rec["url"].split(", ")  # type: ignore[union-attr]
+        urls = rec["url"].split(", ")
         with open(file_, "w") as buffer:
             for url in urls:
                 context.configure(
@@ -158,18 +158,18 @@ def run_migrations_online() -> None:
 
     for name, rec in engines.items():
         engine = rec["engine"]
-        rec["connection"] = conn = engine.connect()  # type: ignore[assignment]
+        rec["connection"] = conn = engine.connect()
 
         if USE_TWOPHASE:
-            rec["transaction"] = conn.begin_twophase()  # type: ignore[assignment]
+            rec["transaction"] = conn.begin_twophase()
         else:
-            rec["transaction"] = conn.begin()  # type: ignore[assignment]
+            rec["transaction"] = conn.begin()
 
     try:
         for name, rec in engines.items():
             logger.info("Migrating database %s" % name)
             context.configure(
-                connection=rec["connection"],  # type: ignore[arg-type]
+                connection=rec["connection"],
                 upgrade_token="%s_upgrades" % name,
                 downgrade_token="%s_downgrades" % name,
                 target_metadata=target_metadata.get(name),
@@ -178,17 +178,17 @@ def run_migrations_online() -> None:
 
         if USE_TWOPHASE:
             for rec in engines.values():
-                rec["transaction"].prepare()  # type: ignore[attr-defined]
+                rec["transaction"].prepare()
 
         for rec in engines.values():
-            rec["transaction"].commit()  # type: ignore[attr-defined]
+            rec["transaction"].commit()
     except:  # noqa: E722
         for rec in engines.values():
-            rec["transaction"].rollback()  # type: ignore[attr-defined]
+            rec["transaction"].rollback()
         raise
     finally:
         for rec in engines.values():
-            rec["connection"].close()  # type: ignore[attr-defined]
+            rec["connection"].close()
 
 
 if context.is_offline_mode():
