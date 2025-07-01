@@ -20,7 +20,7 @@ This is a microservices-based backend system consisting of the following compone
 - **terraform** - Infrastructure as Code for multi-cloud deployment (AWS + Google Cloud)
 - **scripts** - Build, deployment, and developer utility commands
 
-## 🚀 Features
+## ✨ Features
 
 - **Database Sharding** - Scalable database architecture with automated migrations
 - **User Authentication** - Secure auth system with JWT tokens
@@ -87,7 +87,7 @@ The project uses 1Password for secure credential management across all environme
 
 Install required Python versions using pyenv:
 
-```bash
+```sh
 pyenv install `cat ta-api/.python-version` && pyenv install `cat ta-ml/.python-version`
 ```
 
@@ -95,13 +95,13 @@ pyenv install `cat ta-api/.python-version` && pyenv install `cat ta-ml/.python-v
 
 Install all Python dependencies:
 
-```bash
+```sh
 ./scripts/poetry_all.sh install
 ```
 
 Install Node.js dependencies for QR code service:
 
-```bash
+```sh
 cd ta-qrcode && pnpm install
 ```
 
@@ -121,19 +121,19 @@ The application uses 1Password for secure environment variable management. Ensur
 
 Start the main API server with environment variables:
 
-```bash
+```sh
 cd ta-api && OP_VAULT_NAME="Tend Attend" OP_APP_ENV="Local" op run --env-file app.env -- poetry run uvicorn main:app --reload --port=8000
 ```
 
 Start the ML service:
 
-```bash
+```sh
 cd ta-ml && poetry run uvicorn main:app --reload --port=8001
 ```
 
 Start the QR code service:
 
-```bash
+```sh
 cd ta-qrcode
 pnpm run build
 pnpm start
@@ -143,13 +143,13 @@ pnpm start
 
 Start the MySQL database with Docker Compose:
 
-```bash
+```sh
 docker compose up
 ```
 
 Run database migrations by calling the API endpoint:
 
-```bash
+```sh
 curl -X POST http://localhost:8000/admin/migration/upgrade
 ```
 
@@ -167,7 +167,7 @@ Each Python component includes:
 
 Run linting and formatting:
 
-```bash
+```sh
 ./scripts/poe_all.sh lint    # Run MyPy and Flake8
 ./scripts/poe_all.sh format  # Run Black and isort
 ./scripts/poe_all.sh test    # Run tests
@@ -175,7 +175,7 @@ Run linting and formatting:
 
 ### CLI Commands
 
-```bash
+```sh
 cd ta-cli
 # Print DDL statements for database schema generation
 poetry run poe db-migration print-ddl
@@ -213,7 +213,7 @@ The project uses a multi-cloud architecture with both AWS and Google Cloud Platf
 
 The deployment process is fully integrated with 1Password for secure credential management:
 
-```bash
+```sh
 ./scripts/build.sh  # Build all components
 ./scripts/deploy.sh <environment>
 ```
