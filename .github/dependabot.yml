@@ -1,0 +1,91 @@
+version: 2
+updates:
+  # Python dependencies - ta-api
+  - package-ecosystem: "pip"
+    directory: "/ta-api"
+    schedule:
+      interval: "daily"
+      time: "12:00"
+      timezone: "Asia/Tokyo"
+    target-branch: "develop"
+
+  # Python dependencies - ta-cli
+  - package-ecosystem: "pip"
+    directory: "/ta-cli"
+    schedule:
+      interval: "daily"
+      time: "12:00"
+      timezone: "Asia/Tokyo"
+    target-branch: "develop"
+
+  # Python dependencies - ta-core
+  - package-ecosystem: "pip"
+    directory: "/ta-core"
+    schedule:
+      interval: "daily"
+      time: "12:00"
+      timezone: "Asia/Tokyo"
+    target-branch: "develop"
+
+  # Python dependencies - ta-ml
+  - package-ecosystem: "pip"
+    directory: "/ta-ml"
+    schedule:
+      interval: "daily"
+      time: "12:00"
+      timezone: "Asia/Tokyo"
+    target-branch: "develop"
+
+  # Node.js dependencies - ta-qrcode
+  - package-ecosystem: "npm"
+    directory: "/ta-qrcode"
+    schedule:
+      interval: "daily"
+      time: "12:00"
+      timezone: "Asia/Tokyo"
+    target-branch: "develop"
+
+  # Docker dependencies - server
+  - package-ecosystem: "docker"
+    directory: "/docker/server"
+    schedule:
+      interval: "daily"
+      time: "12:00"
+      timezone: "Asia/Tokyo"
+    target-branch: "develop"
+
+  # Docker dependencies - ml-server
+  - package-ecosystem: "docker"
+    directory: "/docker/ml-server"
+    schedule:
+      interval: "daily"
+      time: "12:00"
+      timezone: "Asia/Tokyo"
+    target-branch: "develop"
+
+  # Docker dependencies - qrcode-server
+  - package-ecosystem: "docker"
+    directory: "/docker/qrcode-server"
+    schedule:
+      interval: "daily"
+      time: "12:00"
+      timezone: "Asia/Tokyo"
+    target-branch: "develop"
+
+  # Terraform dependencies
+  - package-ecosystem: "terraform"
+    directory: "/terraform/environments/prod"
+    schedule:
+      interval: "daily"
+      time: "12:00"
+      timezone: "Asia/Tokyo"
+    target-branch: "develop"
+
+  # GitHub Actions dependencies
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+      time: "12:00"
+      timezone: "Asia/Tokyo"
+    target-branch: "develop"
