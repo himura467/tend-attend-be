@@ -1,4 +1,4 @@
-FROM python:3.10-slim-bookworm AS base
+FROM python:3.13-slim-bookworm AS base
 RUN apt-get update && apt-get install --no-install-recommends -y \
   gcc \
   curl \
