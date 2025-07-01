@@ -26,7 +26,7 @@
   "devDependencies": {
     "@types/aws-lambda": "^8.10.149",
     "@types/jsdom": "^21.1.7",
-    "eslint": "^9.28.0",
+    "eslint": "^9.30.0",
     "npm-run-all2": "^8.0.4",
     "prettier": "^3.5.3",
     "prettier-plugin-organize-imports": "^4.1.0",
