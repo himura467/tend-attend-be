@@ -1,7 +1,6 @@
 {
   "name": "ta-qrcode",
   "version": "1.0.0",
-  "description": "",
   "main": "dist/index.js",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
@@ -14,10 +13,7 @@
     "lint-fix:prettier": "prettier --cache --write .",
     "ci:lint": "run-s lint:eslint lint:prettier"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "packageManager": "pnpm@10.11.0",
+  "packageManager": "pnpm@10.12.4",
   "dependencies": {
     "canvas": "^3.1.0",
     "jsdom": "^26.1.0",
