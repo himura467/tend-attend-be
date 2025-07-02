@@ -1,4 +1,3 @@
 onlyBuiltDependencies:
-  - aws-sdk
   - canvas
   - esbuild
